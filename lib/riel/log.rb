@@ -196,8 +196,6 @@ module RIEL
     end
 
     def print_stack_frame(frame, cname, msg, lvl, &blk)
-      puts "frame: #{frame.inspect}"
-      
       md = FRAME_RE.match(frame)
       file, line, func = md[1], md[2], (md[3] || "")
       file.sub!(/.*\//, "")
