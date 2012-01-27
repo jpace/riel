@@ -26,6 +26,10 @@ module RIEL
       value.nil? ? "" : value.to_s
     end
 
+    def inspect
+      "(#{@column}, #{@row}) => #{@value}"
+    end
+
     def formatted_value width, align
       strval = _value width
 
@@ -87,7 +91,7 @@ module RIEL
   
   class AsciiTable
     def initialize args
-      @cells = Hash.new { |h, k| h[k] = Hash.new }
+      @cells = Array.new
       @cellwidth = args[:cellwidth] || 12
       @align = args[:align] || :left
       @columns = Array.new
@@ -101,16 +105,29 @@ module RIEL
       @banner_rows[rownum] = char
     end
     
-    def to_column
-      @cells.keys.sort[-1]
+    def last_column
+      @cells.collect { |cell| cell.column }.max
     end
 
-    def to_row
-      @cells.values.collect { |x| x.keys }.flatten.sort[-1]
+    def last_row
+      @cells.collect { |cell| cell.row }.max
+    end
+
+    def cells_in_column col
+      @cells.select { |cell| cell.column == col }
+    end
+
+    def cells_in_row row
+      @cells.select { |cell| cell.row == row }
     end
 
     def cell col, row
-      @cells[col][row] ||= Cell.new(col, row, @default_value)
+      cl = @cells.detect { |c| c.row == row && c.column == col }
+      unless cl
+        cl = Cell.new(col, row, @default_value)
+        @cells << cl
+      end
+      cl
     end
 
     def set_column_align col, align
@@ -150,7 +167,7 @@ module RIEL
     end
 
     def print_row row, align = nil
-      tocol = to_column
+      tocol = last_column
       col = 0
       fmtdvalues = Array.new
       while col <= tocol
@@ -166,7 +183,7 @@ module RIEL
     end
 
     def print_banner char = '-'
-      banner = (0 .. to_column).collect { |col| bc = BannerCell.new(char, col, 1) }
+      banner = (0 .. last_column).collect { |col| bc = BannerCell.new(char, col, 1) }
       bannervalues = banner.collect { |bc| bc.formatted_value @cellwidth, :center }
       print_cells bannervalues
     end
@@ -180,7 +197,7 @@ module RIEL
     def print
       print_header
       
-      (1 .. to_row).each do |row|
+      (1 .. last_row).each do |row|
         if char = @banner_rows[row]
           print_banner char
         end
