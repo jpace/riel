@@ -95,14 +95,14 @@ module RIEL
       @cellwidth = args[:cellwidth] || 12
       @align = args[:align] || :left
       @columns = Array.new
-      @banner_rows = Hash.new
+      @separator_rows = Hash.new
       @default_value = args[:default_value] || ""
     end
 
-    # sets a banner for the row preceding +rownum+. Does not change the
+    # sets a separator for the row preceding +rownum+. Does not change the
     # coordinates for any other cells.
-    def set_banner_row rownum, char = '-'
-      @banner_rows[rownum] = char
+    def set_separator_row rownum, char = '-'
+      @separator_rows[rownum] = char
     end
     
     def last_column
@@ -198,7 +198,7 @@ module RIEL
       print_header
       
       (1 .. last_row).each do |row|
-        if char = @banner_rows[row]
+        if char = @separator_rows[row]
           print_banner char
         end
         print_row row
