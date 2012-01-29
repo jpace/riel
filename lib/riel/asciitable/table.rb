@@ -2,87 +2,71 @@
 # -*- ruby -*-
 
 require 'riel/log'
-
-Log.level = Log::DEBUG
+require 'riel/asciitable/cell'
 
 module RIEL
-  class Cell
-    attr_reader :column
-    attr_reader :row
+  class Column
+    attr_accessor :width
+    attr_accessor :num
+    attr_accessor :align
+    attr_accessor :table
 
-    attr_accessor :value
-    attr_accessor :colors
-    attr_accessor :span
-
-    def initialize column, row, value = nil, colors = Array.new
-      @column = column
-      @row = row
-      @value = value
-      @colors = colors
-      @span = span
+    def initialize table, num, width = nil, align = nil
+      @table = table
+      @num = num
+      @width = width
+      @align = align
     end
 
-    def _value width
-      value.nil? ? "" : value.to_s
-    end
-
-    def inspect
-      "(#{@column}, #{@row}) => #{@value}"
-    end
-
-    def formatted_value width, align
-      strval = _value width
-
-      if @span
-        ncolumns = @span - @column
-        width = width * (1 + ncolumns) + (3 * ncolumns)
-      end
-
-      diff = width - strval.length
-        
-      lhs, rhs = case align
-                 when :left
-                   [ 0, diff ]
-                 when :right
-                   [ diff, 0 ]
-                 when :center
-                   l = diff / 2
-                   r = diff - l
-                   [ l, r ]
-                 else
-                   $stderr.puts "oh my!: #{align}"
-                 end
-
-      str = (" " * lhs) + strval + (" " * rhs)
-      
-      if colors
-        colors.each do |cl|
-          str = str.send cl
-        end
-      end
-
-      str
+    def total fromrow, torow
+      @table.cells_in_column(@num).inject(0) { |sum, cell| sum + (cell.row >= fromrow && cell.row <= torow ? cell.value.to_i : 0) }
     end
   end
 
-  class BannerCell < Cell
-    def initialize char, col, row
+  class Row
+    attr_accessor :table
+    attr_accessor :num
+
+    def initialize table, num
+      @table = table
+      @num = num
+    end
+
+    def print columns, align = nil
+      tocol = @table.last_column
+      col = 0
+      fmtdvalues = Array.new
+      while col <= tocol
+        aln = align || @table.get_column_align(col)
+        cell = @table.cell(col, @num)
+        width = @table.get_column_width col
+        fmtdvalues << cell.formatted_value(width, aln)
+        if cell.span
+          col += (cell.span - col)
+        end
+        col += 1
+      end
+      print_cells fmtdvalues
+    end
+
+    def print_cells values
+      $stdout.puts "| " + values.join(" | ") + " |"
+    end
+  end
+
+  class BannerRow < Row
+    def initialize table, char
       @char = char
-      super(col, row)
+      super(table, nil)
     end
 
-    def _value width
-      @char * width
-    end
-  end  
-
-  class Column
-    attr_accessor :width
-    attr_accessor :align
-
-    def initialize width = nil, align = nil
-      @width = width
-      @align = align
+    def print char = '-'
+      banner = (0 .. @table.last_column).collect { |col| bc = BannerCell.new(char, col, 1) }
+      bannervalues = banner.collect_with_index do |bc, col| 
+        width = @table.get_column_width col
+        bc.formatted_value width, :center
+      end
+      print_cells bannervalues
     end
   end
 
@@ -147,7 +131,7 @@ module RIEL
     end
 
     def column col
-      @columns[col] ||= Column.new
+      @columns[col] ||= Column.new(self, col, @cellwidth, @align)
     end
 
     def set_cellspan fromcol, tocol, row
@@ -167,25 +151,11 @@ module RIEL
     end
 
     def print_row row, align = nil
-      tocol = last_column
-      col = 0
-      fmtdvalues = Array.new
-      while col <= tocol
-        aln = align || get_column_align(col)
-        cell = cell(col, row)
-        fmtdvalues << cell.formatted_value(@cellwidth, aln)
-        if cell.span
-          col += (cell.span - col)
-        end
-        col += 1
-      end
-      print_cells fmtdvalues
+      Row.new(self, row).print @columns, align
     end
 
     def print_banner char = '-'
-      banner = (0 .. last_column).collect { |col| bc = BannerCell.new(char, col, 1) }
-      bannervalues = banner.collect { |bc| bc.formatted_value @cellwidth, :center }
-      print_cells bannervalues
+      BannerRow.new(self, char).print
     end
     
     def print_header

@@ -1,13 +1,17 @@
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+riellibdir = File.dirname(__FILE__)
+
+$:.unshift(riellibdir) unless
+  $:.include?(riellibdir) || $:.include?(File.expand_path(riellibdir))
 
 module RIEL
   VERSION = '0.0.1'
 end
 
-rbfiles = Dir[File.dirname(__FILE__) + "/riel/**/*.rb"]
+rbfiles = Dir[riellibdir + "/riel/**/*.rb"]
+
+rieldir = riellibdir + '/riel'
 
 rbfiles.sort.each do |rbfile|
-  rootname = rbfile.match(%r{.*/(\w+)\.rb})[1]
+  rootname = rbfile.sub(Regexp.new('^' + rieldir + '/([\/\w]+)\.rb'), '\1')
   require "riel/" + rootname
 end
