@@ -30,6 +30,10 @@ module RIEL
       "(#{@column}, #{@row}) => #{@value}"
     end
 
+    def to_s
+      "(#{@column}, #{@row}) => #{@value}"
+    end
+
     def formatted_value width, align
       strval = _value width
 
