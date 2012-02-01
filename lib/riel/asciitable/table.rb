@@ -28,7 +28,7 @@ module RIEL
       def set_separator_row rownum, char = '-'
         @separator_rows[rownum] = char
       end
-      
+
       def last_column
         @cells.collect { |cell| cell.column }.max
       end
