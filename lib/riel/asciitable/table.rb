@@ -121,6 +121,10 @@ module RIEL
         end
       end
 
+      # returns the values in cells, sorted and unique
+      def sort_values cells
+        cells.collect { |cell| cell.value }.uniq.sort.reverse
+      end
 
       def get_highlight_colors 
         Array.new
