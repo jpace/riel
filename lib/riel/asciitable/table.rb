@@ -8,9 +8,6 @@ require 'riel/asciitable/row'
 
 module RIEL
   module ASCIITable
-    class Header
-    end
-    
     class Table
       include Loggable      
 
@@ -27,6 +24,19 @@ module RIEL
       # coordinates for any other cells.
       def set_separator_row rownum, char = '-'
         @separator_rows[rownum] = char
+      end
+
+      def add_separator_row char = '-'
+        @separator_rows[last_row + 1] = char
+      end
+
+      def add_separators nbetween
+        # banner every N rows
+        drows = data_rows
+
+        drows.first.upto((drows.last - 1) / nbetween) do |num|
+          set_separator_row 1 + num * nbetween, '-'
+        end
       end
 
       def last_column
@@ -62,11 +72,11 @@ module RIEL
         column(col).width = width
       end
 
-      def get_column_width col
+      def column_width col
         ((c = @columns[col]) && c.width) || @cellwidth
       end
 
-      def get_column_align col
+      def column_align col
         ((c = @columns[col]) && c.align) || @align
       end
 
@@ -84,10 +94,6 @@ module RIEL
 
       def set_color col, row, *colors
         cell(col, row).colors = colors
-      end
-
-      def print_cells values
-        $stdout.puts "| " + values.join(" | ") + " |"
       end
 
       def print_row row, align = nil
@@ -114,6 +120,46 @@ module RIEL
           print_row row
         end
       end
+
+
+      def get_highlight_colors 
+        Array.new
+      end
+
+      def highlight_cells_in_row row, offset
+        cells = data_cells_for_row row, offset
+        highlight_cells cells
+      end
+
+      def highlight_cells cells
+        vals = sort_values cells
+
+        colors = get_highlight_colors
+        
+        cells.each do |cell|
+          idx = vals.index cell.value
+          if cols = colors[idx]
+            cell.colors = cols
+          end
+        end
+      end
+
+      def highlight_cells_in_column col
+        cells = cells_in_column(col)[data_rows.first .. data_rows.last]
+        highlight_cells cells
+      end
+
+      def highlight_max_cells
+        (1 .. last_row).each do |row|
+          highlight_cells_in_row row, 0
+          highlight_cells_in_row row, 1
+        end
+
+        0.upto(1) do |n|
+          highlight_cells_in_column data_columns.last + n
+        end
+      end
+
     end
   end
 end
