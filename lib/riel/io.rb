@@ -3,9 +3,7 @@
 
 require 'riel/file'
 
-
 class IO
-
   $-w = false
 
   # Reads the stream into an array. It works even when $/ == nil, which
@@ -20,14 +18,19 @@ class IO
 
   $-w = true
 
-  def self.writelines(name, lines)
-    fpn = File._to_pathname(name)
-    
-    fpn.open(File::WRONLY | File::TRUNC | File::CREAT) do |f|
-      f.puts lines
+  class << self
+    def writelines name, lines
+      fpn = File._to_pathname name
+      
+      fpn.open(File::WRONLY | File::TRUNC | File::CREAT) do |f|
+        f.puts lines
+      end
+
+      fpn
     end
-
-    fpn
+    
+    def numlines io
+      io.readlines.size
+    end
   end
-
 end

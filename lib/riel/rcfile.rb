@@ -17,7 +17,7 @@ class RCFile
     @settings = Array.new
     
     if File.exists?(fname)
-      IO.readlines(fname).each do |line|
+      IO::readlines(fname).each do |line|
         line.sub!(/\s*#.*/, "")
         line.chomp!
         name, value = line.split(/\s*[=:]\s*/)

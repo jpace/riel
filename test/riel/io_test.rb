@@ -4,9 +4,7 @@
 require 'rubyunit'
 require 'riel/io'
 
-
 class IOTestCase < RUNIT::TestCase
-
   def xtest_readlines
     orig = $/
 
@@ -28,10 +26,9 @@ class IOTestCase < RUNIT::TestCase
 
     puts "writelines: <<<#{writelines}>>>"
     
-    IO.writelines(name, writelines)
+    IO.writelines name, writelines
 
-    readlines = IO.readlines name
+    readlines = IO::readlines name
     assert_equal writelines.collect { |line| line + "\n" }, readlines
   end
-
 end
