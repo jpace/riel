@@ -2,7 +2,7 @@ require 'rubygems'
 require 'fileutils'
 require './lib/riel'
 require 'rake/testtask'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 
 task :default => :test
 
@@ -15,7 +15,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "riel"
-  s.version = "1.1.4"
+  s.version = "1.1.5"
   s.author = "Jeff Pace"
   s.email = "jpace@incava.org"
   s.homepage = "http://www.incava.org/projects/riel"
@@ -28,7 +28,7 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README"]
 end
  
-Rake::GemPackageTask.new(spec) do |pkg| 
+Gem::PackageTask.new(spec) do |pkg| 
   pkg.need_zip = true 
   pkg.need_tar_gz = true 
 end 

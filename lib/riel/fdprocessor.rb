@@ -1,11 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubygems'
-require 'riel'
-
 module RIEL
-
   # File and directory processor, with filtering.
 
   class FileDirProcessor
