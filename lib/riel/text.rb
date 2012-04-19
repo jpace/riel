@@ -180,9 +180,7 @@ module Text
   end
 
   # Highlights using ANSI escape sequences.
-
   class ANSIHighlighter < Highlighter
-
     ATTRIBUTES = Hash[
       'none'       => '0', 
       'reset'      => '0',
@@ -212,19 +210,18 @@ module Text
 
     RESET = "\e[0m"
 
-    def self.make(str)
-      colors = parse_colors(str)
-      ANSIHighlighter.new(colors)
+    def self.make str
+      colors = parse_colors str
+      ANSIHighlighter.new colors
     end
 
-    def initialize(colors = DEFAULT_COLORS)
+    def initialize colors = DEFAULT_COLORS
       super
       @code = nil
     end
 
     # Returns the escape sequence for the given names.
-
-    def names_to_code(names)
+    def names_to_code names
       str = ""
       names.each do |name|
         code = ATTRIBUTES[name]
@@ -235,11 +232,11 @@ module Text
       str
     end
 
-    def highlight(str)
+    def highlight str
       @code ||= begin
                   @code = @colors.collect do |color|
-                    names_to_code(color)
-                  end.join("")
+                    names_to_code color
+                  end.join ""
                 end
       
       @code + str + RESET
@@ -255,7 +252,6 @@ module Text
   # Thus, no magenta or cyan.
 
   class HTMLHighlighter < Highlighter
-
     def initialize
       # we need to know what we're resetting from (bold, font, underlined ...)
       @stack = []
@@ -282,7 +278,7 @@ module Text
       "</span>"
     end
 
-    def color_value(cname)
+    def color_value cname
       case cname
       when "cyan"
         "#00FFFF"
@@ -294,8 +290,7 @@ module Text
     end
 
     # Returns the code for the given name.
-
-    def names_to_code(names)
+    def names_to_code names
       str = ""
 
       names.each do |name|
@@ -342,27 +337,21 @@ module Text
   # Does no highlighting.
 
   class NonHighlighter < Highlighter
-
     def initialize
       super(nil)
     end
 
     # Since the NonHighlighter does no highlighting, and thus its name, this
     # returns an empty string.
-
-    def names_to_code(colorname)
+    def names_to_code colorname
       ""
     end
-
   end
-
 
   # An object that can be highlighted. This is used by the String class.
 
   module Highlightable
-
     # The highlighter for the class in which this module is included.
-
     @@highlighter = ANSIHighlighter.new(Text::Highlighter::DEFAULT_COLORS)
 
     Text::Highlighter::all_colors.each do |name|
@@ -376,8 +365,7 @@ module Text
 
     # Sets the highlighter for this class. This can be either by type or by
     # String.
-
-    def highlighter=(hl)
+    def highlighter= hl
       $VERBOSE = false
       @@highlighter = case hl
                       when Text::Highlighter
@@ -393,11 +381,8 @@ module Text
                       end
       
     end
-
   end
-
   $HAVE_TEXT_HIGHLIGHT = true
-
 end
 
 # String is extended to support highlighting.
