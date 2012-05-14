@@ -58,24 +58,24 @@ module ANSIColor
   #     underscore bold magenta on cyan
   #     underscore red on bold cyan
 
-  def ANSIColor.code(str)
+  def ANSIColor.code str
     fg, bg = str.split(/\s*\bon_?\s*/)
     (fg ? foreground(fg) : "") + (bg ? background(bg) : "")
   end
 
   # returns the code for the given background color(s)
-  def ANSIColor.background(bgcolor)
+  def ANSIColor.background bgcolor
     make_code("on_" + bgcolor)
   end
 
   # returns the code for the given foreground color(s)
-  def ANSIColor.foreground(fgcolor)
+  def ANSIColor.foreground fgcolor
     make_code(fgcolor)
   end
 
   protected
 
-  def ANSIColor.make_code(str)
+  def ANSIColor.make_code str
     if str
       str.split.collect do |s|
         if attr = ATTRIBUTES[s]

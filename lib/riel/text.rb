@@ -83,7 +83,7 @@ module Text
 
     attr_reader :colors
     
-    def self.parse_colors(str)
+    def self.parse_colors str
       str.scan(Regexp.new(COLORS_RE)).collect do |color|
         color[0] ? "on_" + color[0] : color[1]
       end
@@ -112,11 +112,11 @@ module Text
       self.class_eval meth.join("\n")
     end
     
-    def initialize(colors)
+    def initialize colors
       @colors = colors
     end
 
-    def highlight(str)
+    def highlight str
       # implemented by subclasses
     end
 
@@ -124,7 +124,7 @@ module Text
       (@colors || '').join(' ')
     end
 
-    def ==(other)
+    def == other
       return @colors.sort == other.colors.sort
     end
 
@@ -133,8 +133,8 @@ module Text
     # colorized and the stream is reset. Otherwise, only the code for the given
     # color name is returned.
     
-    def color(colorstr, obj = self, &blk)
-      #                        ^^^^ this is the Module self
+    def color colorstr, obj = self, &blk
+      #                       ^^^^ this is the Module self
 
       colornames = self.class.parse_colors(colorstr)
       result     = names_to_code(colornames)
@@ -162,19 +162,19 @@ module Text
     #     underscore bold magenta on cyan
     #     underscore red on cyan
 
-    def code(str)
+    def code str
       fg, bg = str.split(/\s*\bon_?\s*/)
       (fg ? foreground(fg) : "") + (bg ? background(bg) : "")
     end
 
     # Returns the code for the given background color(s).
-    def background(bgcolor)
-      names_to_code("on_" + bgcolor)
+    def background bgcolor
+      names_to_code "on_" + bgcolor
     end
 
     # Returns the code for the given foreground color(s).
-    def foreground(fgcolor)
-      fgcolor.split(/\s+/).collect { |fg| names_to_code(fg) }.join("")
+    def foreground fgcolor
+      fgcolor.split(/\s+/).collect { |fg| names_to_code fg }.join("")
     end
 
   end
@@ -259,7 +259,7 @@ module Text
 
     # Returns the start tag for the given name.
     
-    def start_style(name)
+    def start_style name
       case name
       when "negative"
         "<span style=\"color: white; background-color: black\">"
@@ -338,7 +338,7 @@ module Text
 
   class NonHighlighter < Highlighter
     def initialize
-      super(nil)
+      super nil
     end
 
     # Since the NonHighlighter does no highlighting, and thus its name, this
