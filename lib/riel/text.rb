@@ -103,13 +103,16 @@ module Text
       all_colors
     end
 
-    all_colors.each do |name|
-      meth = Array.new
-      meth << "def #{name}(&blk)"
-      meth << "  color(\"#{name}\", &blk)"
-      meth << "end"
+    # todo: change this to use method_missing:
+    if false
+      all_colors.each do |name|
+        meth = Array.new
+        meth << "def #{name}(&blk)"
+        meth << "  color(\"#{name}\", &blk)"
+        meth << "end"
 
-      self.class_eval meth.join("\n")
+        self.class_eval meth.join("\n")
+      end
     end
     
     def initialize colors
@@ -354,13 +357,18 @@ module Text
     # The highlighter for the class in which this module is included.
     @@highlighter = ANSIHighlighter.new(Text::Highlighter::DEFAULT_COLORS)
 
-    Text::Highlighter::all_colors.each do |name|
-      meth = Array.new
-      meth << "def #{name}(&blk)"
-      meth << "  @@highlighter.color(\"#{name}\", self, &blk)"
-      meth << "end"
-
-      self.class_eval meth.join("\n")
+    # this dynamically adds methods for individual colors.
+    def method_missing(meth, *args, &blk)
+      if Text::Highlighter::all_colors.include? meth.to_s
+        methdecl = Array.new
+        methdecl << "def #{meth}(&blk)"
+        methdecl << "  @@highlighter.color(\"#{meth}\", self, &blk)"
+        methdecl << "end"
+        self.class.class_eval methdecl.join("\n")
+        send meth, *args, &blk
+      else
+        super
+      end
     end
 
     # Sets the highlighter for this class. This can be either by type or by

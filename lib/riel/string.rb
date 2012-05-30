@@ -17,8 +17,8 @@ class String
   #
   # Returns whether the string ends with the given substring.
   #
-  def ends_with(substr)
-    return rindex(substr) == (length - substr.length)
+  def ends_with substr
+    return rindex(substr) == length - substr.length
   end
 
   #
@@ -26,7 +26,7 @@ class String
   #
   def num
     begin
-      Integer(self)
+      Integer self
     rescue ArgumentError => ae
       nil
     end
@@ -37,7 +37,7 @@ class String
   # +other+ removed. +other+ may be a string or regular expression.
   #
   def -(other)
-    sub(other, '')
+    sub other, ''
   end
 
   # 
@@ -73,7 +73,7 @@ class String
   #    "4-".to_ranges                                    # [ 4 .. String::Infinity ]
   #    "1-".to_ranges :min => 0, :max => 8               # [ 1 .. 8 ]
   # 
-  def to_ranges(args = Hash.new)
+  def to_ranges args = Hash.new
     min      = args[:min] || -Infinity
     max      = args[:max] || Infinity
     collapse = args[:collapse]
@@ -106,18 +106,18 @@ class String
   # Returns a highlighted (colored) version of the string, applying the regular
   # expressions in the array, which are paired with the desired color.
   #
-  def highlight(re, color)
+  def highlight re, color
     gsub(re) do |match|
       HIGHLIGHTER.color(color, match)
     end
   end
 
   # :stopdoc:
-  def self._has_matchdata?(md, idx)
+  def self._has_matchdata? md, idx
     md && md[idx] && !md[idx].empty?
   end
 
-  def self._matchdata_to_number(md, idx, default)
+  def self._matchdata_to_number md, idx, default
     _has_matchdata?(md, idx) ? md[idx].to_i : default
   end
   # :startdoc:

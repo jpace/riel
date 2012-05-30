@@ -5,7 +5,7 @@
 #
 # Logging Module
 #
-# Author:: Jeff Pacec <jpace@incava.org>
+# Author:: Jeff Pace <jpace@incava.org>
 # Documentation:: Author
 #
 
@@ -49,9 +49,7 @@ require 'riel/ansicolor'
 # 
 
 module RIEL
-
   class Log
-
     $LOGGING_LEVEL = nil
 
     attr_accessor :quiet
@@ -117,14 +115,14 @@ module RIEL
 
     # Assigns output to a file with the given name. Returns the file; client
     # is responsible for closing it.
-    def outfile=(f)
+    def outfile= f
       @output = if f.kind_of?(IO) then f else File.new(f, "w") end
     end
 
     # Creates a printf format for the given widths, for aligning output. To lead
     # lines with zeros (e.g., "00317") the line_width argument must be a string,
     # not an integer.
-    def set_widths(file_width, line_width, func_width)
+    def set_widths file_width, line_width, func_width
       @file_width     = file_width
       @line_width     = line_width
       @function_width = func_width
@@ -132,71 +130,71 @@ module RIEL
       @format = "[%#{file_width}s:%#{line_width}d] {%#{func_width}s}"
     end
 
-    def ignore_file(fname)
+    def ignore_file fname
       ignored_files[fname] = true
     end
     
-    def ignore_method(methname)
+    def ignore_method methname
       ignored_methods[methname] = true
     end
     
-    def ignore_class(classname)
+    def ignore_class classname
       ignored_classes[classname] = true
     end
 
-    def log_file(fname)
-      ignored_files.delete(fname)
+    def log_file fname
+      ignored_files.delete fname
     end
     
-    def log_method(methname)
-      ignored_methods.delete(methname)
+    def log_method methname
+      ignored_methods.delete methname
     end
     
-    def log_class(classname)
-      ignored_classes.delete(classname)
+    def log_class classname
+      ignored_classes.delete classname
     end
 
-    def debug(msg = "", depth = 1, &blk)
-      log(msg, DEBUG, depth + 1, &blk)
+    def debug msg = "", depth = 1, &blk
+      log msg, DEBUG, depth + 1, &blk
     end
 
-    def info(msg = "", depth = 1, &blk)
-      log(msg, INFO, depth + 1, &blk)
+    def info msg = "", depth = 1, &blk
+      log msg, INFO, depth + 1, &blk
     end
 
-    def warn(msg = "", depth = 1, &blk)
-      log(msg, WARN, depth + 1, &blk)
+    def warn msg = "", depth = 1, &blk
+      log msg, WARN, depth + 1, &blk
     end
 
-    def error(msg = "", depth = 1, &blk)
-      log(msg, ERROR, depth + 1, &blk)
+    def error msg = "", depth = 1, &blk
+      log msg, ERROR, depth + 1, &blk
     end
 
-    def fatal(msg = "", depth = 1, &blk)
-      log(msg, FATAL, depth + 1, &blk)
+    def fatal msg = "", depth = 1, &blk
+      log msg, FATAL, depth + 1, &blk
     end
 
     # Logs the given message.
-    def log(msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk)
+    def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
       if lvl >= level
         frame = caller(depth)[0]
-        print_stack_frame(frame, cname, msg, lvl, &blk)
+        print_stack_frame frame, cname, msg, lvl, &blk
       end
     end
 
     # Shows the current stack.
-    def stack(msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk)
+    def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
       if lvl >= level
-        stk = caller(depth)
+        stk = caller depth
         for frame in stk
-          print_stack_frame(frame, cname, msg, lvl, &blk)
+          print_stack_frame frame, cname, msg, lvl, &blk
           msg = ""
         end
       end
     end
 
-    def print_stack_frame(frame, cname, msg, lvl, &blk)
-      md = FRAME_RE.match(frame)
+    def print_stack_frame frame, cname, msg, lvl, &blk
+      md = FRAME_RE.match frame
       file, line, func = md[1], md[2], (md[3] || "")
       file.sub!(/.*\//, "")
 
@@ -211,25 +209,25 @@ module RIEL
       end
     end
 
-    def trim_to(str, maxlen)
+    def trim_to str, maxlen
       str[0 ... maxlen.to_i.abs]
     end
 
-    def print_formatted(file, line, func, msg, lvl, &blk)
+    def print_formatted file, line, func, msg, lvl, &blk
       if trim
-        file = trim_to(file, @file_width)
-        line = trim_to(line, @line_width)
-        func = trim_to(func, @function_width)
+        file = trim_to file, @file_width
+        line = trim_to line, @line_width
+        func = trim_to func, @function_width
       end
 
       hdr = sprintf @format, file, line, func
-      print(hdr, msg, lvl, &blk)
+      print hdr, msg, lvl, &blk
     end
     
-    def print(hdr, msg, lvl, &blk)
+    def print hdr, msg, lvl, &blk
       if blk
         x = blk.call
-        if x.kind_of?(String)
+        if x.kind_of? String
           msg = x
         else
           return
@@ -247,7 +245,7 @@ module RIEL
       end      
     end
 
-    def set_color(lvl, color)
+    def set_color lvl, color
       @colors[lvl] = ANSIColor::code(color)
     end
 
@@ -261,24 +259,23 @@ module RIEL
       @@log
     end
 
-    ANSIColor::ATTRIBUTES.sort.each do |attr|
-      methname = attr[0]
-      # puts "methname: #{methname}"
-      instmeth = Array.new
-      instmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-      instmeth << "  log(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-      instmeth << "end"
-      instance_eval instmeth.join("\n")
+    if true
+      ANSIColor::ATTRIBUTES.sort.each do |attr|
+        methname = attr[0]
 
-      clsmeth = Array.new
-      clsmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-      clsmeth << "  logger.#{methname}(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-      clsmeth << "end"
-      # clsmeth << "def #{methname}(msg, *args)"
-      # clsmeth << "  logger.#{methname}(msg, *args)"
-      # clsmeth << "end"
-      # puts "clsmeth: #{clsmeth}"
-      class_eval clsmeth.join("\n")
+        instmeth = Array.new
+        instmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
+        instmeth << "  log(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
+        instmeth << "end"
+        instance_eval instmeth.join("\n")
+
+        clsmeth = Array.new
+        clsmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
+        clsmeth << "  logger.#{methname}(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
+        clsmeth << "end"
+
+        class_eval clsmeth.join("\n")
+      end
     end
 
     def self.set_default_widths
@@ -289,11 +286,11 @@ module RIEL
       logger.verbose
     end
 
-    def self.verbose=(v)
+    def self.verbose= v
       logger.verbose = v && v != 0 ? DEBUG : FATAL
     end
 
-    def self.level=(lvl)
+    def self.level= lvl
       logger.level = lvl
     end
 
@@ -301,7 +298,7 @@ module RIEL
       logger.quiet
     end
 
-    def self.quiet=(q)
+    def self.quiet= q
       logger.quiet = q
     end
 
@@ -309,12 +306,12 @@ module RIEL
       logger.format
     end
 
-    def self.format=(fmt)
+    def self.format= fmt
       logger.format = fmt
     end
 
     # Assigns output to the given stream.
-    def self.output=(io)
+    def self.output= io
       logger.output = io
     end
 
@@ -323,7 +320,7 @@ module RIEL
     end
 
     # sets whether to colorize the entire line, or just the message.
-    def self.colorize_line=(col)
+    def self.colorize_line= col
       logger.colorize_line = col
     end
 
@@ -333,7 +330,7 @@ module RIEL
 
     # Assigns output to a file with the given name. Returns the file; client
     # is responsible for closing it.
-    def self.outfile=(fname)
+    def self.outfile= fname
       logger.outfile = fname
     end
 
@@ -342,73 +339,73 @@ module RIEL
     end
 
     # Creates a printf format for the given widths, for aligning output.
-    def self.set_widths(file_width, line_width, func_width)
-      logger.set_widths(file_width, line_width, func_width)
+    def self.set_widths file_width, line_width, func_width
+      logger.set_widths file_width, line_width, func_width
     end
 
-    def self.ignore_file(fname)
-      logger.ignore_file(fname)
+    def self.ignore_file fname
+      logger.ignore_file fname
     end
     
-    def self.ignore_method(methname)
-      logger.ignored_method(methname)
+    def self.ignore_method methname
+      logger.ignored_method methname
     end
     
-    def self.ignore_class(classname)
-      logger.ignored_class(classname)
+    def self.ignore_class classname
+      logger.ignored_class classname
     end
 
-    def self.log_file(fname)
-      logger.log_file(fname)
+    def self.log_file fname
+      logger.log_file fname
     end
     
-    def self.log_method(methname)
-      logger.log_method(methname)
+    def self.log_method methname
+      logger.log_method methname
     end
     
-    def self.log_class(classname)
-      logger.log_class(classname)
+    def self.log_class classname
+      logger.log_class classname
     end
 
-    def self.debug(msg = "", depth = 1, &blk)
-      logger.log(msg, DEBUG, depth + 1, &blk)
+    def self.debug msg = "", depth = 1, &blk
+      logger.log msg, DEBUG, depth + 1, &blk
     end
 
-    def self.info(msg = "", depth = 1, &blk)
-      logger.log(msg, INFO, depth + 1, &blk)
+    def self.info msg = "", depth = 1, &blk
+      logger.log msg, INFO, depth + 1, &blk
     end
 
-    def self.fatal(msg = "", depth = 1, &blk)
-      logger.log(msg, FATAL, depth + 1, &blk)
+    def self.fatal msg = "", depth = 1, &blk
+      logger.log msg, FATAL, depth + 1, &blk
     end
 
-    def self.log(msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk)
-      logger.log(msg, lvl, depth + 1, cname, &blk)
+    def self.log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
+      logger.log msg, lvl, depth + 1, cname, &blk
     end
 
-    def self.stack(msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk)
-      logger.stack(msg, lvl, depth + 1, cname, &blk)
+    def self.stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
+      logger.stack msg, lvl, depth + 1, cname, &blk
     end
 
-    def self.warn(msg = "", depth = 1, &blk)
+    def self.warn msg = "", depth = 1, &blk
       if verbose
-        logger.log(msg, WARN, depth + 1, &blk)
+        logger.log msg, WARN, depth + 1, &blk
       else
         $stderr.puts "WARNING: " + msg
       end
     end
 
-    def self.error(msg = "", depth = 1, &blk)
+    def self.error msg = "", depth = 1, &blk
       if verbose
-        logger.log(msg, ERROR, depth + 1, &blk)
+        logger.log msg, ERROR, depth + 1, &blk
       else
         $stderr.puts "ERROR: " + msg
       end
     end
 
-    def self.write(msg, depth = 1, cname = nil, &blk)
+    def self.write msg, depth = 1, cname = nil, &blk
       if verbose
-        stack(msg, Log::WARN, depth + 1, cname, &blk)
+        stack msg, Log::WARN, depth + 1, cname, &blk
       elsif quiet
         # nothing
       else
@@ -416,71 +413,66 @@ module RIEL
       end
     end
 
-    def self.set_color(lvl, color)
-      logger.set_color(lvl, color)
+    def self.set_color lvl, color
+      logger.set_color lvl, color
     end
 
   end
-
 
   class AppLog < Log
     include Log::Severity
-
   end
-
 
   module Loggable
-
     # Logs the given message, including the class whence invoked.
-    def log(msg = "", lvl = Log::DEBUG, depth = 1, &blk)
-      Log.log(msg, lvl, depth + 1, self.class.to_s, &blk)
+    def log msg = "", lvl = Log::DEBUG, depth = 1, &blk
+      Log.log msg, lvl, depth + 1, self.class.to_s, &blk
     end
 
-    def debug(msg = "", depth = 1, &blk)
-      Log.log(msg, Log::DEBUG, depth + 1, self.class.to_s, &blk)
+    def debug msg = "", depth = 1, &blk
+      Log.log msg, Log::DEBUG, depth + 1, self.class.to_s, &blk
     end
 
-    def info(msg = "", depth = 1, &blk)
-      Log.log(msg, Log::INFO, depth + 1, self.class.to_s, &blk)
+    def info msg = "", depth = 1, &blk
+      Log.log msg, Log::INFO, depth + 1, self.class.to_s, &blk
     end
 
-    def warn(msg = "", depth = 1, &blk)
-      Log.log(msg, Log::WARN, depth + 1, self.class.to_s, &blk)
+    def warn msg = "", depth = 1, &blk
+      Log.log msg, Log::WARN, depth + 1, self.class.to_s, &blk
     end
 
-    def error(msg = "", depth = 1, &blk)
-      Log.log(msg, Log::ERROR, depth + 1, self.class.to_s, &blk)
+    def error msg = "", depth = 1, &blk
+      Log.log msg, Log::ERROR, depth + 1, self.class.to_s, &blk
     end
 
-    def fatal(msg = "", depth = 1, &blk)
-      Log.log(msg, Log::FATAL, depth + 1, self.class.to_s, &blk)
+    def fatal msg = "", depth = 1, &blk
+      Log.log msg, Log::FATAL, depth + 1, self.class.to_s, &blk
     end
 
-    def stack(msg = "", lvl = Log::DEBUG, depth = 1, &blk)
-      Log.stack(msg, lvl, depth + 1, self.class.to_s, &blk)
+    def stack msg = "", lvl = Log::DEBUG, depth = 1, &blk
+      Log.stack msg, lvl, depth + 1, self.class.to_s, &blk
     end
 
-    def write(msg = "", depth = 1, &blk)
-      Log.write(msg, depth + 1, self.class.to_s, &blk)
+    def write msg = "", depth = 1, &blk
+      Log.write msg, depth + 1, self.class.to_s, &blk
     end
 
-    ANSIColor::ATTRIBUTES.sort.each do |attr|
-      methname = attr[0]
-      # puts "methname: #{methname}"
-      meth = Array.new
-      meth << "def #{methname}(msg = \"\", lvl = Log::DEBUG, depth = 1, &blk)"
-      meth << "  Log.#{methname}(msg, lvl, depth + 1, self.class.to_s, &blk)"
-      meth << "end"
-      # puts "meth: #{meth}"
-      module_eval meth.join("\n")
+    if true
+      ANSIColor::ATTRIBUTES.sort.each do |attr|
+        methname = attr[0]
+        # puts "methname: #{methname}"
+        meth = Array.new
+        meth << "def #{methname} msg = \"\", lvl = Log::DEBUG, depth = 1, &blk"
+        meth << "  Log.#{methname} msg, lvl, depth + 1, self.class.to_s, &blk"
+        meth << "end"
+        # puts "meth: #{meth}"
+        module_eval meth.join("\n")
+      end
     end
-
   end
-
 end
 
 include RIEL
-
 
 if __FILE__ == $0
   Log.verbose = true
@@ -492,11 +484,11 @@ if __FILE__ == $0
     
     def initialize
       # log "hello"
-      Log.set_color(Log::DEBUG, "cyan")
-      Log.set_color(Log::INFO,  "bold cyan") 
-      Log.set_color(Log::WARN,  "reverse")
-      Log.set_color(Log::ERROR, "bold red")
-      Log.set_color(Log::FATAL, "bold white on red")
+      Log.set_color Log::DEBUG, "cyan"
+      Log.set_color Log::INFO,  "bold cyan"
+      Log.set_color Log::WARN,  "reverse"
+      Log.set_color Log::ERROR, "bold red"
+      Log.set_color Log::FATAL, "bold white on red"
     end
 
     def meth
@@ -520,7 +512,6 @@ if __FILE__ == $0
       i <<= 1
       fatal "i: #{i}"
     end
-
   end
 
   class Another
@@ -534,7 +525,7 @@ if __FILE__ == $0
       Log.log "happy, happy, joy, joy"
     end
   end
-
+  
   demo = Demo.new
   demo.meth
 
@@ -544,5 +535,4 @@ if __FILE__ == $0
   # Another.cmeth
 
   # Log.info "we are done."
-  
 end
