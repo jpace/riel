@@ -177,7 +177,17 @@ module RIEL
     # Logs the given message.
     def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
       if lvl >= level
-        frame = caller(depth)[0]
+        frame = nil
+
+        stk = caller 0
+        stk.reverse.each_with_index do |frm, idx|
+          if frm.index(%r{/riel/log.rb:\d+:in\b})
+            break
+          else
+            frame = frm
+          end
+        end
+
         print_stack_frame frame, cname, msg, lvl, &blk
       end
     end
@@ -259,7 +269,31 @@ module RIEL
       @@log
     end
 
-    if true
+    def self.method_missing(meth, *args, &blk)
+      if code = ANSIColor::ATTRIBUTES[meth.to_s]
+        add_color_method meth.to_s, code
+        send meth, *args, &blk
+      else
+        super
+      end
+    end
+
+    def self.add_color_method color, code
+      instmeth = Array.new
+      instmeth << "def #{color}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
+      instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
+      instmeth << "end"
+      instance_eval instmeth.join("\n")
+
+      clsmeth = Array.new
+      clsmeth << "def #{color}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
+      clsmeth << "  logger.#{color}(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
+      clsmeth << "end"
+
+      class_eval clsmeth.join("\n")
+    end
+
+    if false
       ANSIColor::ATTRIBUTES.sort.each do |attr|
         methname = attr[0]
 
@@ -457,15 +491,30 @@ module RIEL
       Log.write msg, depth + 1, self.class.to_s, &blk
     end
 
-    if true
+    def method_missing(meth, *args, &blk)
+      if ANSIColor::ATTRIBUTES[meth.to_s]
+        add_color_method meth.to_s
+        send meth, *args, &blk
+      else
+        super
+      end
+    end
+
+    def add_color_method color
+      meth = Array.new
+      meth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, &blk"
+      meth << "  Log.#{color} msg, lvl, depth + 1, self.class.to_s, &blk"
+      meth << "end"
+      self.class.module_eval meth.join("\n")
+    end
+
+    if false
       ANSIColor::ATTRIBUTES.sort.each do |attr|
         methname = attr[0]
-        # puts "methname: #{methname}"
         meth = Array.new
         meth << "def #{methname} msg = \"\", lvl = Log::DEBUG, depth = 1, &blk"
         meth << "  Log.#{methname} msg, lvl, depth + 1, self.class.to_s, &blk"
         meth << "end"
-        # puts "meth: #{meth}"
         module_eval meth.join("\n")
       end
     end

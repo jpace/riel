@@ -26,7 +26,7 @@ module Text
       underscore
       underline
       blink
-      negative                  # not reverse, which is already defined for strings.
+      negative
       concealed
       black
       red
@@ -356,6 +356,17 @@ module Text
   module Highlightable
     # The highlighter for the class in which this module is included.
     @@highlighter = ANSIHighlighter.new(Text::Highlighter::DEFAULT_COLORS)
+
+    if false
+      Text::Highlighter::ATTRIBUTES.each do |name|
+        meth = Array.new
+        meth << "def #{name}(&blk)"
+        meth << "  @@highlighter.color(\"#{name}\", self, &blk)"
+        meth << "end"
+
+        self.class_eval meth.join("\n")
+      end
+    end
 
     # this dynamically adds methods for individual colors.
     def method_missing(meth, *args, &blk)
