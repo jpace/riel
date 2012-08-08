@@ -1,9 +1,6 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'pathname'
 require 'rubyunit'
 require 'stringio'
@@ -39,15 +36,15 @@ class LogTestCase < RUNIT::TestCase
     }
 
     expected_output = [
-      "[log_test.rb    :  33] {test_output_arg     } hello, world?",
-      "[log_test.rb    :  34] {test_output_arg     } hello, world?",
-      "[log_test.rb    :  35] {test_output_arg     } hello, world?",
-      "[log_test.rb    :  36] {test_output_arg     } hello, world?",
-      "[log_test.rb    :  37] {test_output_arg     } hello, world?",
-      "[log_test.rb    :  38] {test_output_arg     } hello, world?",
-      "[log_test.rb    : 165] {call                } ",
-      "[log_test.rb    : 165] {run_test            } ",
-      "[log_test.rb    :  71] {test_output_arg     } ",
+      "[iel/test/riel/log_test.rb:  30] {test_output_arg     } hello, world?",
+      "[iel/test/riel/log_test.rb:  31] {test_output_arg     } hello, world?",
+      "[iel/test/riel/log_test.rb:  32] {test_output_arg     } hello, world?",
+      "[iel/test/riel/log_test.rb:  33] {test_output_arg     } hello, world?",
+      "[iel/test/riel/log_test.rb:  34] {test_output_arg     } hello, world?",
+      "[iel/test/riel/log_test.rb:  35] {test_output_arg     } hello, world?",
+      "[iel/test/riel/log_test.rb: 162] {call                } ",
+      "[iel/test/riel/log_test.rb: 162] {run_test            } ",
+      "[iel/test/riel/log_test.rb:  68] {test_output_arg     } ",
       nil,
       nil,
       nil,
@@ -68,7 +65,7 @@ class LogTestCase < RUNIT::TestCase
       nil,
     ]
 
-    run_test(@verbose_setup, log, *expected_output)
+    run_test @verbose_setup, log, *expected_output
   end
 
   def test_output_block
@@ -76,7 +73,7 @@ class LogTestCase < RUNIT::TestCase
       Log.log { "hello, world?" }
     }
     
-    run_test(@verbose_setup, log, "[log_test.rb    :  76] {test_output_block   } hello, world?")
+    run_test(@verbose_setup, log, "[iel/test/riel/log_test.rb:  73] {test_output_block   } hello, world?")
 
     info_setup = Proc.new {
       Log.level = Log::INFO
@@ -99,7 +96,7 @@ class LogTestCase < RUNIT::TestCase
     }
     
     Log.set_widths(-15, 4, -40)
-    run_test(@verbose_setup, log, "[log_test.rb    :  98] {LogTestCase#test_instance_log           } hello, world?")
+    run_test(@verbose_setup, log, "[iel/log_test.rb:  95] {LogTestCase#test_instance_log           } hello, world?")
 
     Log.set_default_widths
   end
@@ -112,9 +109,9 @@ class LogTestCase < RUNIT::TestCase
     }
     
     run_test(@verbose_setup, log,
-             "[log_test.rb    : 109] {LogTestCase#test_col} \e[37mwhite wedding\e[0m",
-             "[log_test.rb    : 110] {LogTestCase#test_col} \e[34mblue iris\e[0m",
-             "[log_test.rb    : 111] {LogTestCase#test_col} \e[46mred\e[0m")
+             "[iel/test/riel/log_test.rb: 106] {LogTestCase#test_col} \e[37mwhite wedding\e[0m",
+             "[iel/test/riel/log_test.rb: 107] {LogTestCase#test_col} \e[34mblue iris\e[0m",
+             "[iel/test/riel/log_test.rb: 108] {LogTestCase#test_col} \e[46mred\e[0m")
 
     Log.set_default_widths
   end
@@ -125,27 +122,27 @@ class LogTestCase < RUNIT::TestCase
     }
     
     Log.set_default_widths
-    run_test(@verbose_setup, log, "[log_test.rb    : 124] {test_format         } hello, world?")
+    run_test(@verbose_setup, log, "[iel/test/riel/log_test.rb: 121] {test_format         } hello, world?")
 
     # Log.set_widths(file_width, line_width, func_width)
     
-    run_format_test(log, -25,    8, 30, "[log_test.rb              :     124] {                   test_format} hello, world?")
-    run_format_test(log,  25,    8, 30, "[              log_test.rb:     124] {                   test_format} hello, world?")
-    run_format_test(log,  25, "08", 30, "[              log_test.rb:00000124] {                   test_format} hello, world?")
+    run_format_test(log, -25,    8, 30, "[iel/test/riel/log_test.rb:     121] {                   test_format} hello, world?")
+    run_format_test(log,  25,    8, 30, "[iel/test/riel/log_test.rb:     121] {                   test_format} hello, world?")
+    run_format_test(log,  25, "08", 30, "[iel/test/riel/log_test.rb:00000121] {                   test_format} hello, world?")
     
     # useless feature of truncating line numbers, but so it goes ...
-    run_format_test(log,   4,   2, -10, "[log_:12] {test_forma} hello, world?")
+    run_format_test(log,   4,   2, -10, "[t.rb:12] {test_forma} hello, world?")
     
     Log.set_default_widths
   end
 
-  def run_format_test(log, file_width, line_width, func_width, expected)
-    Log.set_widths(file_width, line_width, func_width)
-    run_test(@verbose_setup, log, expected)
+  def run_format_test log, file_width, line_width, func_width, expected
+    Log.set_widths file_width, line_width, func_width
+    run_test @verbose_setup, log, expected
   end    
 
   # the ctor is down here so the lines above are less likely to change.
-  def initialize(test, name)
+  def initialize test, name
     @nonverbose_setup = Proc.new {
       Log.verbose = false
       Log.output  = StringIO.new
@@ -159,16 +156,16 @@ class LogTestCase < RUNIT::TestCase
     super
   end
 
-  def run_test(setup, log, *expected)
+  def run_test setup, log, *expected
     io = setup.call
 
     log.call
 
-    assert_not_nil(io)
+    assert_not_nil io
     str = io.string
     assert_not_nil str
 
-    lines = str.split("\n")
+    lines = str.split "\n"
 
     assert_equals expected.size, lines.size, "number of lines of output"
 

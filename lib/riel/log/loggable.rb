@@ -72,7 +72,7 @@ module RIEL
       Log.write msg, depth + 1, self.class.to_s, &blk
     end
 
-    def method_missing(meth, *args, &blk)
+    def method_missing meth, *args, &blk
       if ANSIColor::ATTRIBUTES[meth.to_s]
         add_color_method meth.to_s
         send meth, *args, &blk
