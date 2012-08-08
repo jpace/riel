@@ -15,7 +15,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "riel"
-  s.version = "1.1.5"
+  s.version = "1.1.6"
   s.author = "Jeff Pace"
   s.email = "jpace@incava.org"
   s.homepage = "http://www.incava.org/projects/riel"

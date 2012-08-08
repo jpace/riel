@@ -79,7 +79,7 @@ module RIEL
       set_defaults
     end
     
-    def verbose=(v)
+    def verbose= v
       @level = case v
                when TrueClass 
                  DEBUG
@@ -219,15 +219,19 @@ module RIEL
       end
     end
 
-    def trim_to str, maxlen
+    def trim_left str, maxlen
       str[0 ... maxlen.to_i.abs]
+    end
+
+    def trim_right str, maxlen
+      str[-maxlen.to_i.abs .. -1]
     end
 
     def print_formatted file, line, func, msg, lvl, &blk
       if trim
-        file = trim_to file, @file_width
-        line = trim_to line, @line_width
-        func = trim_to func, @function_width
+        file = trim_right file, @file_width
+        line = trim_left  line, @line_width
+        func = trim_left  func, @function_width
       end
 
       hdr = sprintf @format, file, line, func
