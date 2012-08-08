@@ -106,7 +106,7 @@ module RIEL
     end
 
     def set_default_widths
-      set_widths(-15, 4, -20)
+      set_widths(-25, 4, -20)
     end
 
     def verbose
@@ -206,7 +206,7 @@ module RIEL
     def print_stack_frame frame, cname, msg, lvl, &blk
       md = FRAME_RE.match frame
       file, line, func = md[1], md[2], (md[3] || "")
-      file.sub!(/.*\//, "")
+      # file.sub!(/.*\//, "")
 
       if cname
         func = cname + "#" + func
