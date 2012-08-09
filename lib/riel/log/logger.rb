@@ -189,8 +189,27 @@ module RIEL
     end
 
     def trim_right str, maxlen
-      if str.length > maxlen.abs
-        str[-(maxlen.to_i.abs) .. -1]
+      mxln = maxlen.abs
+
+      # magic number 3 for the ellipses ...
+
+      if str.length > mxln
+        path = str.split('/')
+        newstr = "..."
+        path.reverse.each do |element|
+          if newstr.length + element.length > mxln
+            while newstr.length < mxln
+              newstr.insert 0, " "
+            end
+            return newstr
+          else
+            if newstr.length > 3
+              newstr.insert 3, "/"
+            end
+            newstr.insert 3, element
+          end
+        end
+        newstr
       else
         str
       end
@@ -234,7 +253,6 @@ module RIEL
 
     def self.method_missing(meth, *args, &blk)
       if code = ANSIColor::ATTRIBUTES[meth.to_s]
-        puts "adding color method: #{meth}"
         add_color_method meth.to_s, code
         send meth, *args, &blk
       else
