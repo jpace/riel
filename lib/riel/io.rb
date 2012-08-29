@@ -4,19 +4,21 @@
 require 'riel/file'
 
 class IO
-  $-w = false
-
   # Reads the stream into an array. It works even when $/ == nil, which
   # works around a problem in Ruby 1.8.1.
-  def readlines
-    contents = []
-    while ((line = gets) && line.length > 0)
-      contents << line
-    end
-    contents
-  end
+  if VERSION == "1.8.1"
+    $-w = false
 
-  $-w = true
+    def readlines
+      contents = []
+      while ((line = gets) && line.length > 0)
+        contents << line
+      end
+      contents
+    end
+
+    $-w = true
+  end
 
   class << self
     def writelines name, lines
