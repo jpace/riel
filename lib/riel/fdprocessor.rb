@@ -43,7 +43,7 @@ module RIEL
 
     def process_directory dir
       dir.children.sort.each do |fd|
-        next if @filter && @filter.include?(fd.basename.to_s)
+        next if @filters && @filters.include?(fd.basename.to_s)
         process fd
       end
     end
