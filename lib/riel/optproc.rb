@@ -41,10 +41,8 @@ module OptProc
       @res     = [ @res ] if @res.kind_of?(Regexp)
       
       if args[:arg]
-        # log { "args.class: #{args[:arg].class}" }
         demargs = args[:arg].dup
         while arg = demargs.shift
-          # log { "arg: #{arg}" }
           case arg
           when :required
             @type = "required"
@@ -56,19 +54,13 @@ module OptProc
             @valuere = demargs.shift
           else
             if re = ARG_TYPES.assoc(arg)
-              # log { "re: #{re}" }
               @valuere   = re[1]
               @argtype   = arg
               @type    ||= "required"
-            else
-              # log { "no expression for arg #{arg}" }
             end
           end
         end
       end
-
-      # log { "valuere: #{@valuere}" }
-      # log { "type: #{@type}" }
     end
 
     def inspect
@@ -80,82 +72,59 @@ module OptProc
     end
 
     def to_s
-      @tags.join(" ")
+      @tags.join " "
     end
 
-    def match_rc?(field)
+    def match_rc? field
       @rc && @rc.include?(field)
     end
 
-    def match_value(val)
-      # log { "valuere: #{@valuere.inspect}; val: #{val}" }
+    def match_value val
       @md = @valuere && @valuere.match(val)
-      # log { "md: #{@md.inspect}" }
       @md && @md[1]
     end
 
-    def match_tag(tag)
-      stack { "@rc: #{@rc.inspect}; @tags: #{@tags.inspect}" }
-
+    def match_tag tag
       if tm = @tags.detect do |t|
-          log { "t: #{t}; tag: #{tag}; idx: #{t.index(tag)}" }
           t.index(tag) == 0 && tag.length <= t.length
         end
         
-        log { "tm: #{tm}" }
         if tag.length == tm.length
           1.0
         else
-          len = tag.length.to_f * 0.01 #  / tm.length
-          log { "len: #{len}" }
-          len
+          tag.length.to_f * 0.01
         end
       else
         nil
       end
     end
     
-    def match(args, opt = args[0])
-      return nil unless %r{^-}.match(opt)
-
-      # log { "opt: #{opt.inspect}; args: #{args.inspect}" }
-      # log { "@rc: #{@rc.inspect}; @re: #{@re.inspect}; @tags: #{@tags.inspect}" }
+    def match args, opt = args[0]
+      return nil unless %r{^-}.match opt
 
       tag, val = opt.split('=', 2)
       tag ||= opt
 
-      # log { "opt: #{opt}; opt: #{opt.class}; tag: #{tag}; tags: #{@tags.inspect}" }
-      # log { "res: #{@res.inspect}" }
-
       @md = nil
       
       if @res && (@md = @res.collect { |re| re.match(opt) }.detect)
-        # log { "matched: #{@md}" }
         1.0
       else
         match_tag(tag)
       end
     end
 
-    def set_value(args, opt = args[0])
-      tag, val = opt.split('=', 2)
+    def set_value args, opt = args[0]
+      tag, val = opt.split '=', 2
       args.shift
-      
-      # log { "opt : #{opt}" }
-      # log { "tag : #{tag}" }
-      # log { "tags: #{@tags.inspect}" }
-      # log { "val : #{val.inspect}" }
-      # log { "md  : #{@md.inspect}" }
 
       if @md
-        # log { "already have match data" }
+        # already have match data
       elsif @type == "required"
         if val
           # already have value
-          # log { "already have value: #{val}" }
         elsif args.size > 0
           val = args.shift
-          # log { "got next value: #{val}" }
         else
           $stderr.puts "value expected"
         end
@@ -165,16 +134,14 @@ module OptProc
         end
       elsif @type == "optional"
         if val
-          # log { "already have value: #{val}" }
+          # already have value
           match_value(val)
         elsif args.size > 0
           if %r{^-}.match(args[0])
-            # log { "skipping next value; apparently option" }
+            # skipping next value; apparently option
           elsif match_value(args[0])
-            # log { "value matches: #{val}" }
+            # value matches
             args.shift
-          else
-            # log { "value does not match" }
           end
         end
       else
@@ -191,14 +158,14 @@ module OptProc
         if @argtype.nil? || @argtype == :regexp
           @md
         else
-          convert_value(@md[1])
+          convert_value @md[1]
         end
       elsif @argtype == :boolean
         true
       end
     end
 
-    def convert_value(val)
+    def convert_value val
       if val
         case @argtype
         when :string
@@ -208,7 +175,7 @@ module OptProc
         when :float
           val.to_f
         when :boolean
-          to_boolean(val)
+          to_boolean val
         when :regexp
           val
         when nil
@@ -221,7 +188,7 @@ module OptProc
       end
     end
 
-    def to_boolean(val)
+    def to_boolean val
       %w{ yes true on soitenly }.include?(val.downcase)
     end
 
