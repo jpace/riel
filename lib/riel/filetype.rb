@@ -71,18 +71,18 @@ class FileType
     set_extensions(false, *NONTEXT_EXTENSIONS)
   end
 
-  def ascii?(c)
+  def ascii? c
     # from ctype.h
     (c.to_i & ~0x7f) == 0
   end
 
-  def type(file)
+  def type file
     begin
       case File.stat(file).ftype
       when "directory"
         DIRECTORY
       when "file"
-        if File.readable?(file)
+        if File.readable? file
           text?(file) ? TEXT : BINARY
         else
           UNREADABLE
@@ -120,12 +120,12 @@ class FileType
     @known.keys.reject { |suf| @known[suf] }
   end
 
-  def text?(file)
+  def text? file
     return false unless File.exists?(file)
     
     if md = EXTENSION_REGEXP.match(file.to_s)
       suffix = md[1]
-      if @known.include?(suffix)
+      if @known.include? suffix
         return @known[suffix]
       end
     end
@@ -135,7 +135,7 @@ class FileType
 
     begin
       File.open(file) do |f|
-        buf = f.read(@test_length)
+        buf = f.read @test_length
         if buf
           buf.each_byte do |ch|
             ntested += 1
@@ -158,20 +158,20 @@ class FileType
     nodd < ntested * @odd_factor
   end
 
-  def self.ascii?(c)
-    return self.instance.ascii?(c)
+  def self.ascii? c
+    return self.instance.ascii? c
   end
 
-  def self.type(file)
-    return self.instance.type(file)
+  def self.type file
+    return self.instance.type file
   end
 
-  def self.set_text(ext)
-    return self.instance.set_text(ext)
+  def self.set_text ext
+    return self.instance.set_text ext
   end
 
-  def self.set_nontext(ext)
-    return self.instance.set_nontext(ext)
+  def self.set_nontext ext
+    return self.instance.set_nontext ext
   end
 
   def self.text_extensions
@@ -182,8 +182,7 @@ class FileType
     return self.instance.nontext_extensions
   end
 
-  def self.text?(file)
-    return self.instance.text?(file)
+  def self.text? file
+    return self.instance.text? file
   end
-
 end

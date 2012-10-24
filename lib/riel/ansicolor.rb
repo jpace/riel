@@ -64,12 +64,12 @@ module ANSIColor
 
   # returns the code for the given background color(s)
   def ANSIColor.background bgcolor
-    make_code("on_" + bgcolor)
+    make_code "on_" + bgcolor
   end
 
   # returns the code for the given foreground color(s)
   def ANSIColor.foreground fgcolor
-    make_code(fgcolor)
+    make_code fgcolor
   end
 
   protected
@@ -83,7 +83,7 @@ module ANSIColor
           $stderr.puts "WARNING: ANSIColor::make_code(" + str + "): unknown color: " + s
           return ""
         end
-      end.join("")
+      end.join ""
     else
       ""
     end

@@ -15,17 +15,16 @@ path = ENV['PATH'].dup
 $VERBOSE = orig_verbose
 
 class File
-
-  def self.text?(file)
+  def self.text? file
     return File.file?(file) && FileType.instance.text?(file)
   end
 
-  def self.binary?(file)
+  def self.binary? file
     return !self.text?(file)
   end
 
   # Returns whether the given object is a file. Ignores errors.
-  def self.is_file?(fd)
+  def self.is_file? fd
     begin 
       return self.stat(fd).file?
     rescue
@@ -35,7 +34,7 @@ class File
   end
   
   # Returns whether the given file is writable. Ignores errors.
-  def self.is_writable?(file)
+  def self.is_writable? file
     begin 
       return self.stat(file).writable?
     rescue
@@ -45,7 +44,7 @@ class File
   end
   
   # Returns whether the given object is a directory. Ignores errors.
-  def self.is_directory?(fd)
+  def self.is_directory? fd
     begin 
       return self.stat(fd).directory?
     rescue
@@ -55,61 +54,61 @@ class File
   end
 
   # Returns an array of all files under the given directory.
-  def self.find_files(dir)
+  def self.find_files dir
     files = Array.new
     Find.find(dir) { |f| files.push(f) if is_file?(f) }
     files
   end
 
   # Returns an array of all directory under the given directory.
-  def self.find_directories(dir)
+  def self.find_directories dir
     dirs = Array.new
     Find.find(dir) { |d| dirs.push(d) if is_directory?(d) }
     dirs
   end
 
   # Removes the file/directory, including all subelements. Use with caution!
-  def self.remove_recursively(fd)
+  def self.remove_recursively fd
     #$$$ this is rmtree
     if fd.directory?
-      fd.children.each { |x| remove_recursively(x) }
+      fd.children.each { |x| remove_recursively x }
     end
     fd.unlink
   end
 
   # Creates the given directory.
-  def self.mkdir(dir)
-    pn = Pathname.new(dir)
+  def self.mkdir dir
+    pn = Pathname.new dir
     pn.mkdir unless pn.exist?
   end
 
   # Moves the files to the given directory, creating it if it does not exist.
-  def self.move_files(dir, files)
-    mkdir(dir)
+  def self.move_files dir, files
+    mkdir dir
 
     files.each do |file|
-      FileUtils.move(file.to_s, dir.to_s)
+      FileUtils.move file.to_s, dir.to_s
     end
   end
 
   # Copies the files to the given directory, creating it if it does not exist.
-  def self.copy_files(dir, files)
-    mkdir(dir)
+  def self.copy_files dir, files
+    mkdir dir
 
     files.each do |file|
-      FileUtils.copy(file.to_s, dir.to_s)
+      FileUtils.copy file.to_s, dir.to_s
     end
   end
 
   # Converts the argument to a Pathname.
-  def self._to_pathname(file)
+  def self._to_pathname file
     file.kind_of?(Pathname) ? file : Pathname.new(file.to_s)
   end
 
   # Reads a file line by line. Returns the pathname for the file, or nil if it
   # does not exist.
-  def self.read_file(file, &blk)
-    fpn = _to_pathname(file)
+  def self.read_file file, &blk
+    fpn = _to_pathname file
     if fpn.exist?
       fpn.open do |f|
         blk.call f.read
@@ -123,7 +122,7 @@ class File
   # Reads a file line by line, calling the given block. Returns the pathname for
   # the file, or nil if it does not exist.
   def self.read_file_lines(file, &blk)
-    fpn = _to_pathname(file)
+    fpn = _to_pathname file
     if fpn.exist?
       fpn.open do |f|
         f.each_line do |line|
@@ -138,12 +137,11 @@ class File
 
   # Opens a file for writing and delegates to the given block.
   def self.open_writable_file(file, &blk)
-    fpn = _to_pathname(file)
+    fpn = _to_pathname file
     
     fpn.open(File::WRONLY | File::TRUNC | File::CREAT) do |f|
-      blk.call(f)
+      blk.call f
     end
-
     fpn
   end
 
@@ -169,15 +167,15 @@ class File
   def self.open_via_temp_file(file, tempfile = nil, tempdir = Dir::tmpdir, &blk)
     tempname = nil
     
-    fpn = _to_pathname(file)
+    fpn = _to_pathname file
     tempfile ||= fpn.rootname
 
     Tempfile.open(tempfile) do |tf|
-      blk.call(tf)
+      blk.call tf
       tempname = tf.path
     end
     
-    FileUtils.mv(tempname, file.to_s)
+    FileUtils.mv tempname, file.to_s
   end
 
   # Writes a file, using write, buffering it via a temp file.
@@ -197,7 +195,7 @@ class File
   # Returns a file for the given basename, sequentially appending an integer
   # until one is found that does not exist. For example, "foo.3" if "foo",
   # "foo.1", and "foo.2" already exist.
-  def self.get_unused_file_name(basename)
+  def self.get_unused_file_name basename
     tgt = basename
     if tgt.exist?
       i = 1

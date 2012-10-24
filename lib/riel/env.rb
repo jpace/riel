@@ -2,9 +2,7 @@
 # -*- ruby -*-
 
 module Env
-
   # Returns the home directory, for both Unix and Windows.
-
   def self.home_directory
     if hm = ENV["HOME"]
       hm
@@ -38,12 +36,11 @@ module Env
   
   # Reads the environment variable, splitting it according to its quoting.
 
-  def self.split(varname)
+  def self.split varname
     if v = ENV[varname]
       v.scan(REGEXP).collect { |x| x[1] || x[2] }
     else
       []
     end
   end
-
 end

@@ -15,7 +15,7 @@ class Array
 
   # $$$ this is the same as Array.sample
   def rand
-    return self[Kernel.rand(length)]
+    return self[Kernel.rand length]
   end
   
 end

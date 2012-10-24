@@ -16,7 +16,7 @@ class RCFile
   def initialize(fname, &blk)
     @settings = Array.new
     
-    if File.exists?(fname)
+    if File.exists? fname
       IO::readlines(fname).each do |line|
         line.sub!(/\s*#.*/, "")
         line.chomp!
@@ -26,7 +26,7 @@ class RCFile
           value.strip!
           @settings << [ name, value ]
           if blk
-            blk.call(name, value)
+            blk.call name, value
           end
         end
       end

@@ -5,8 +5,8 @@ require 'riel/log'
 
 class Timer
 
-  def initialize(what, args = Hash.new)
-    if args.kind_of?(Fixnum)
+  def initialize what, args = Hash.new
+    if args.kind_of? Fixnum
       args = { :level => args }
     end
 
@@ -18,18 +18,18 @@ class Timer
     elmsg  = args.include?(:elmsg)    ? args[:elmsg]    : "#{what} elapsed   "
     
     sttime = Time.new
-    logmsg(stmsg,  sttime)
+    logmsg stmsg,  sttime
     
     yield
     
     endtime = Time.new
     
-    logmsg(stmsg,  sttime)
-    logmsg(endmsg, endtime)
-    logmsg(elmsg,  endtime - sttime)
+    logmsg stmsg,  sttime
+    logmsg endmsg, endtime
+    logmsg elmsg,  endtime - sttime
   end
 
-  def logmsg(msg, value)
+  def logmsg msg, value
     if msg
       if @io
         @io.puts "#{msg}: #{value}"
@@ -41,7 +41,7 @@ class Timer
 
 end
 
-def timethis(what)
+def timethis what
   sttime = Time.new
   Log.log "#{what} start time: #{sttime}"
   yield

@@ -139,13 +139,13 @@ module Text
     def color colorstr, obj = self, &blk
       #                       ^^^^ this is the Module self
 
-      colornames = self.class.parse_colors(colorstr)
-      result     = names_to_code(colornames)
+      colornames = self.class.parse_colors colorstr
+      result     = names_to_code colornames
       
       if blk
         result << blk.call
         result << names_to_code("reset")
-      elsif obj.kind_of?(String)
+      elsif obj.kind_of? String
         result << obj
         result << names_to_code("reset")
       end
@@ -267,10 +267,10 @@ module Text
       when "negative"
         "<span style=\"color: white; background-color: black\">"
       when /on_(\w+)/
-        colval = color_value($1)
+        colval = color_value $1
         "<span style=\"background-color: #{colval}\">"
       else
-        colval = color_value(name)
+        colval = color_value name
         "<span style=\"color: #{colval}\">"
       end
     end
@@ -355,7 +355,7 @@ module Text
 
   module Highlightable
     # The highlighter for the class in which this module is included.
-    @@highlighter = ANSIHighlighter.new(Text::Highlighter::DEFAULT_COLORS)
+    @@highlighter = ANSIHighlighter.new Text::Highlighter::DEFAULT_COLORS
 
     if false
       Text::Highlighter::ATTRIBUTES.each do |name|

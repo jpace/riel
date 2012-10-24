@@ -5,7 +5,7 @@
 # identical, A contains B, B contains A, or A and B contain common elements.
 
 class SetDiff
-  def SetDiff.new(a, b)
+  def SetDiff.new a, b
     allitems = a | b
 
     a_and_b    = Array.new
@@ -13,8 +13,8 @@ class SetDiff
     b_not_in_a = Array.new
 
     allitems.each do |it|
-      if a.include?(it)
-        if b.include?(it)
+      if a.include? it
+        if b.include? it
           a_and_b
         else
           a_not_in_b
@@ -24,12 +24,12 @@ class SetDiff
       end << it
     end
     
-    super(a_and_b, a_not_in_b, b_not_in_a)
+    super a_and_b, a_not_in_b, b_not_in_a
   end
 
   attr_reader :a_and_b, :a_not_in_b, :b_not_in_a
 
-  def initialize(a_and_b, a_not_in_b, b_not_in_a)
+  def initialize a_and_b, a_not_in_b, b_not_in_a
     @a_and_b    = a_and_b
     @a_not_in_b = a_not_in_b
     @b_not_in_a = b_not_in_a

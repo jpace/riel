@@ -3,11 +3,8 @@
 
 require 'tempfile'
 
-
 class Tempfile
-
   class << self
-
     alias_method :original_open, :open
 
     # this works around the behavior (fixed in 1.9) so that open returns
@@ -24,5 +21,4 @@ class Tempfile
       tempname
     end
   end
-
 end

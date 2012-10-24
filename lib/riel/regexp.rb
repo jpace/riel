@@ -4,7 +4,7 @@
 # Negates the given expression.
 class NegatedRegexp < Regexp
 
-  def match(str)
+  def match str
     !super
   end
 
@@ -27,7 +27,7 @@ class Regexp
 
   # Returns a regular expression for the given Unix file system expression.
   
-  def self.unixre_to_string(pat)
+  def self.unixre_to_string pat
     pat.gsub(%r{(\\.)|(.)}) do
       $1 || SH2RE[$2] || $2
     end
@@ -70,7 +70,7 @@ class Regexp
   # Handles negation, whole words, and ignore case (Ruby no longer supports
   # Rexexp.new(/foo/i), as of 1.8).
   
-  def self.create(pat, args = Hash.new)
+  def self.create pat, args = Hash.new
     negated    = args[:negated]
     ignorecase = args[:ignorecase]
     wholewords = args[:wholewords]
@@ -134,19 +134,19 @@ class Regexp
       tot | (val ? flag : 0)
     end
     
-    reclass.new(pattern, flags)
+    reclass.new pattern, flags
   end
 
-  def self.matches_word_start?(pat)
-    WORD_START_RE.match(pat)
+  def self.matches_word_start? pat
+    WORD_START_RE.match pat
   end
 
-  def self.matches_word_end?(pat)
-    WORD_END_RE.match(pat)
+  def self.matches_word_end? pat
+    WORD_END_RE.match pat
   end
 
   # applies Perl-style substitution (s/foo/bar/).
-  def self.perl_subst(pat)
+  def self.perl_subst pat
   end
   
 end

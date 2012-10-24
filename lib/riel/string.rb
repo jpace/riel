@@ -36,7 +36,7 @@ class String
   # Returns a string based on this instance, with the first occurrance of
   # +other+ removed. +other+ may be a string or regular expression.
   #
-  def -(other)
+  def - other
     sub other, ''
   end
 
@@ -53,8 +53,8 @@ class String
   #
   # A class method for +to_ranges+. Deprecated in favor of the instance method.
   # 
-  def self.to_ranges(str, args = Hash.new)
-    str.to_ranges(args)
+  def self.to_ranges str, args = Hash.new
+    str.to_ranges args
   end
 
   # 
@@ -83,7 +83,7 @@ class String
       md   = section.match(RANGE_REGEXP)
       next unless md
       
-      from = String._matchdata_to_number(md, 1, min)
+      from = String._matchdata_to_number md, 1, min
       to   = String._has_matchdata?(md, 2) ? String._matchdata_to_number(md, 3, max) : from
 
       prevrange = ranges[-1]
@@ -108,7 +108,7 @@ class String
   #
   def highlight re, color
     gsub(re) do |match|
-      HIGHLIGHTER.color(color, match)
+      HIGHLIGHTER.color color, match
     end
   end
 

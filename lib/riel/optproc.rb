@@ -207,14 +207,14 @@ module OptProc
 
     attr_reader :options
     
-    def initialize(data)
+    def initialize data
       @options   = Array.new
       @shortopts = Array.new
       @longopts  = Array.new
       @regexps   = Hash.new
       
       data.each do |optdata|
-        opt = OptProc::Option.new(optdata)
+        opt = OptProc::Option.new optdata
         @options << opt
 
         opt.tags.each do |tag|
@@ -267,7 +267,7 @@ module OptProc
 
       # log { "processing option #{opt}" }
 
-      if md = COMBINED_OPTS_RES.collect { |re| re.match(opt) }.detect
+      if md = COMBINED_OPTS_RES.collect { |re| re.match opt }.detect
         lhs = md[1]
         rhs = "-" + md[2]
 
@@ -275,7 +275,7 @@ module OptProc
         
         args[0, 1] = lhs, rhs
         
-        return process_option(args)
+        return process_option args
       elsif opt[0] == 45
         ch = opt[1]
         assocopts = if ch == 45  # 45 = '-'
@@ -300,7 +300,7 @@ module OptProc
         log { "bestmatch: #{@bestmatch}" }
         log { "bestopts : #{@bestopts.inspect}" }
         if @bestopts.size == 1
-          @bestopts[0].set_value(args)
+          @bestopts[0].set_value args
           return @bestopts[0]
         else
           optstr = @bestopts.collect { |x| '(' + x.tags.join(', ') + ')' }.join(', ')
@@ -312,7 +312,7 @@ module OptProc
       nil
     end
 
-    def set_option(optlist, args)
+    def set_option optlist, args
       @bestmatch = nil
       @bestopts  = Array.new
       
@@ -320,7 +320,7 @@ module OptProc
         if mv = option.match(args)
           if mv >= 1.0
             # exact match:
-            option.set_value(args)
+            option.set_value args
             return option
           elsif !@bestmatch || @bestmatch <= mv
             @bestmatch = mv

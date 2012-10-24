@@ -35,7 +35,7 @@ class Dir
     if dir.readable?
       dir.children.sort.each do |child|
         if child.exist? && child.directory?
-          self.remove_if_empty(child, subargs)
+          self.remove_if_empty child, subargs
         end
       end
       
@@ -45,10 +45,10 @@ class Dir
         can_delete = dir.children.all? do |x| 
           bname = x.basename.to_s
           deletable.any? do |del|
-            if del.kind_of?(String)
+            if del.kind_of? String
               bname == del
-            elsif del.kind_of?(Regexp)
-              del.match(bname)
+            elsif del.kind_of? Regexp
+              del.match bname
             else
               false
             end
@@ -75,15 +75,15 @@ class Dir
 
   # Moves and copies files to the given directory, creating
   # it if it does not exist.
-  def self.move_and_copy_files(dir, move_files, copy_files)
+  def self.move_and_copy_files dir, move_files, copy_files
     dir.mkdir unless dir.exist?
 
     move_files.each do |mfile|
-      File.move(mfile.to_s, dir.to_s)
+      File.move mfile.to_s, dir.to_s
     end
 
     copy_files.each do |cfile|
-      File.copy(cfile.to_s, dir.to_s)
+      File.copy cfile.to_s, dir.to_s
     end
   end
 
