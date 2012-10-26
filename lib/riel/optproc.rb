@@ -6,7 +6,6 @@ require 'riel/log'
 require 'riel/text'
 require 'riel/enumerable'
 
-
 module OptProc
 
   class Option
@@ -25,7 +24,7 @@ module OptProc
     ARG_TYPES << [ :string,  ARG_STRING  ]
     ARG_TYPES << [ :boolean, ARG_BOOLEAN ]
 
-    def initialize(args = Hash.new, &blk)
+    def initialize args = Hash.new, &blk
       @tags    = args[:tags] || Array.new
       @rc      = args[:rc]
       @rc      = [ @rc ] if @rc.kind_of?(String)
@@ -110,7 +109,7 @@ module OptProc
       if @res && (@md = @res.collect { |re| re.match(opt) }.detect)
         1.0
       else
-        match_tag(tag)
+        match_tag tag
       end
     end
 
@@ -130,16 +129,16 @@ module OptProc
         end
 
         if val
-          match_value(val)
+          match_value val
         end
       elsif @type == "optional"
         if val
           # already have value
-          match_value(val)
+          match_value val
         elsif args.size > 0
-          if %r{^-}.match(args[0])
+          if %r{^-}.match args[0]
             # skipping next value; apparently option
-          elsif match_value(args[0])
+          elsif match_value args[0]
             # value matches
             args.shift
           end
@@ -150,7 +149,7 @@ module OptProc
 
       value = value_from_match
 
-      set(value, opt, args)
+      set value, opt, args
     end
 
     def value_from_match
@@ -192,7 +191,7 @@ module OptProc
       %w{ yes true on soitenly }.include?(val.downcase)
     end
 
-    def set(val, opt = nil, args = nil)
+    def set val, opt = nil, args = nil
       # log { "argtype: #{@argtype}; md: #{@md.inspect}" }
 
       setargs = [ val, opt, args ].select_with_index { |x, i| i < @set.arity }
@@ -262,7 +261,7 @@ module OptProc
       Regexp.new('^ ( - [a-z] )  ( .+    ) $ ', Regexp::EXTENDED)
     ]
 
-    def process_option(args)
+    def process_option args
       opt = args[0]
 
       # log { "processing option #{opt}" }
