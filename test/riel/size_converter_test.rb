@@ -1,11 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/size_converter'
 
-class SizeConverterTestCase < RUNIT::TestCase
-
+class SizeConverterTestCase < Test::Unit::TestCase
   SIZES = [
     # 0123456789012345 0123456789012345 0123456789012345 0123456789012345 0123456789012345 0123456789012345 0123456789012345 
     # base10.0         base10.1         base10.2         si.0             si.1             si.2             num              ]
@@ -34,31 +33,30 @@ class SizeConverterTestCase < RUNIT::TestCase
     [ "2T",            "2.2T",          "2.20T",         "2TiB",          "2.0TiB",        "2.00TiB",       2 * 2 ** 40      ],
   ]
 
-  def assert_conversion(cls, data, offset, didx, sidx, dec_places = nil)
+  def assert_conversion cls, data, offset, didx, sidx, dec_places = nil
     numstr  = data[-1]
     conv    = dec_places.nil? ? cls.convert(numstr) : cls.convert(numstr, dec_places)
-    assert_equals data[offset + didx], conv, "size index: #{sidx}; data index: #{didx}; offset: #{offset}; decimal_places: #{dec_places}"
+    assert_equal data[offset + didx], conv, "size index: #{sidx}; data index: #{didx}; offset: #{offset}; decimal_places: #{dec_places}"
   end
 
-  def do_test(cls, offset)
+  def run_test cls, offset
     SIZES.each_with_index do |data, sidx|
-      assert_conversion(cls, data, offset, 1, sidx)
+      assert_conversion cls, data, offset, 1, sidx
       (0 .. 2).each do |dec_places|
-        assert_conversion(cls, data, offset, dec_places, sidx, dec_places)
+        assert_conversion cls, data, offset, dec_places, sidx, dec_places
       end
     end
   end
 
   def test_default
-    do_test(SizeConverter, 0)
+    run_test SizeConverter, 0
   end
 
   def test_human
-    do_test(SizeConverter::Human, 0)
+    run_test SizeConverter::Human, 0
   end
 
   def test_si
-    do_test(SizeConverter::SI, 3)
+    run_test SizeConverter::SI, 3
   end
-
 end

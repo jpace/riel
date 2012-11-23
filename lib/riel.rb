@@ -4,7 +4,7 @@ $:.unshift(riellibdir) unless
   $:.include?(riellibdir) || $:.include?(File.expand_path(riellibdir))
 
 module RIEL
-  VERSION = '1.1.8'
+  VERSION = '1.1.11'
 end
 
 rbfiles = Dir[riellibdir + "/riel/**/*.rb"]

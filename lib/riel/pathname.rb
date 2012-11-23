@@ -3,7 +3,7 @@
 
 require 'pathname'
 require 'riel/string'
-require 'ftools'
+require 'fileutils'
 
 class Pathname
 

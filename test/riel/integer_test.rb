@@ -8,11 +8,11 @@ module PVN
     def setup
     end
 
-    def assert_true boolean, message = nil
+    def assert_true boolean, message = ""
       assert boolean, message
     end
     
-    def assert_false boolean, message = nil
+    def assert_false boolean, message = ""
       assert !boolean, message
     end
     

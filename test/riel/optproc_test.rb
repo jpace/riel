@@ -3,17 +3,16 @@
 
 require 'pathname'
 require 'tempfile'
-require 'rubyunit'
+require 'test/unit'
 require 'riel/optproc'
 
-class OptProcTestCase < RUNIT::TestCase
-
+class OptProcTestCase < Test::Unit::TestCase
   def setup
     # ignore what they have in ENV[HOME]    
     ENV['HOME'] = '/this/should/not/exist'
   end
 
-  def do_test(args, exp, &blk)
+  def run_test args, exp, &blk
     expected = DEFAULTS.merge(exp)
 
     # ignore what they have in ENV[HOME]    
@@ -22,7 +21,7 @@ class OptProcTestCase < RUNIT::TestCase
     origargs = args.dup
     
     gopt = GlarkOptions.instance
-    gopt.run(args)
+    gopt.run args
     
     expected.sort { |a, b| a[0].to_s <=> b[0].to_s }.each do |opt, exval|
       meth = gopt.method(opt)
@@ -42,8 +41,8 @@ class OptProcTestCase < RUNIT::TestCase
     gopt.reset
   end
 
-  def do_match_tag_test(opt, exp, tag)
-    m = opt.match([ tag ])
+  def run_match_tag_test opt, exp, tag
+    m = opt.match [ tag ]
     match = nil
     if exp.respond_to? :include?
       match = exp.include? m
@@ -55,34 +54,34 @@ class OptProcTestCase < RUNIT::TestCase
   
   def test_match_tag
     @after = "nothing"
-    opt = OptProc::Option.new(:tags => %w{ --after-context -A }, :arg => [ :integer ])
+    opt = OptProc::Option.new :tags => %w{ --after-context -A }, :arg => [ :integer ]
     
     %w{ --after-context --after-context=3 -A }.each do |tag|
-      do_match_tag_test(opt, 1.0, tag)
+      run_match_tag_test opt, 1.0, tag
     end
 
-    do_match_tag_test(opt, nil, '-b')
+    run_match_tag_test opt, nil, '-b'
     
     # we don't support case insensitivity (which is insensitive of us):
     %w{ --After-Context --AFTER-CONTEXT=3 -a }.each do |tag|
-      do_match_tag_test(opt, nil, tag)
+      run_match_tag_test opt, nil, tag
     end
 
     %w{ --after --after=3 }.each do |tag|
-      do_match_tag_test(opt, 0.07, tag)
+      run_match_tag_test opt, 0.07, tag
     end
 
     %w{ --after-cont --after-cont=3 }.each do |tag|
-      do_match_tag_test(opt, 0.12, tag)
+      run_match_tag_test opt, 0.12, tag
     end
 
     %w{ --aft --aft=3 }.each do |tag|
-      do_match_tag_test(opt, 0.05, tag)
+      run_match_tag_test opt, 0.05, tag
     end
   end
 
-  def do_match_value_test(opt, exp, val)
-    m = opt.match_value(val)
+  def run_match_value_test(opt, exp, val)
+    m = opt.match_value val
     assert !!m == !!exp, "match value #{val}; expected: #{exp.inspect}; actual: #{m.inspect}"
   end
 
@@ -94,7 +93,7 @@ class OptProcTestCase < RUNIT::TestCase
       '43'    => nil,
       '34.12' => nil
     }.each do |val, exp|
-      do_match_value_test(opt, exp, val)
+      run_match_value_test opt, exp, val
     end
   end
 
@@ -108,7 +107,7 @@ class OptProcTestCase < RUNIT::TestCase
       '-34'   => true,
       '+34'   => true,
     }.each do |val, exp|
-      do_match_value_test(opt, exp, val)
+      run_match_value_test opt, exp, val
     end
   end
 
@@ -123,7 +122,7 @@ class OptProcTestCase < RUNIT::TestCase
       '.'     => false,
       '12.'   => false,
     }.each do |val, exp|
-      do_match_value_test(opt, exp, val)
+      run_match_value_test opt, exp, val
     end
   end
 
@@ -146,7 +145,7 @@ class OptProcTestCase < RUNIT::TestCase
         "'" + val + "'",
         val,
       ].each do |qval|
-        do_match_value_test(opt, exp, qval)
+        run_match_value_test opt, exp, qval
       end
     end
   end
@@ -163,10 +162,10 @@ class OptProcTestCase < RUNIT::TestCase
     ].each do |args|
       @after = nil
 
-      m = opt.match(args)
+      m = opt.match args
       assert_equal 1.0, m, "args: #{args.inspect}"
       # curr = args.shift
-      opt.set_value(args)
+      opt.set_value args
       assert_equal 3.0, @after
     end
   end
@@ -184,9 +183,9 @@ class OptProcTestCase < RUNIT::TestCase
     ].each do |args|
       @ctx = nil
 
-      m = opt.match(args)
+      m = opt.match args
       assert_equal 1.0, m, "args: #{args.inspect}"
-      opt.set_value(args)
+      opt.set_value args
       assert_equal 3, @ctx
     end
 
@@ -197,9 +196,9 @@ class OptProcTestCase < RUNIT::TestCase
 
       @ctx = nil
 
-      m = opt.match(args)
+      m = opt.match args
       assert_equal 1.0, m, "args: #{args.inspect}"
-      opt.set_value(args)
+      opt.set_value args
       assert_equal val, @ctx
     end
   end
@@ -217,16 +216,15 @@ class OptProcTestCase < RUNIT::TestCase
       ].each do |args|
         @range_start = nil
         
-        m = opt.match(args)
+        m = opt.match args
         assert_equal 1.0, m, "args: #{args.inspect}"
-        opt.set_value(args)
+        opt.set_value args
         assert_equal rg, @range_start
       end
     end
   end
 
 end
-
 
 if __FILE__ == $0
   Log.level = Log::DEBUG

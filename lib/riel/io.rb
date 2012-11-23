@@ -6,7 +6,7 @@ require 'riel/file'
 class IO
   # Reads the stream into an array. It works even when $/ == nil, which
   # works around a problem in Ruby 1.8.1.
-  if VERSION == "1.8.1"
+  if RUBY_VERSION == "1.8.1"
     $-w = false
 
     def readlines

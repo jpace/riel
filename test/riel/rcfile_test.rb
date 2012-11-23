@@ -1,13 +1,12 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/rcfile'
 require 'riel/tempfile'
 
-class RCFileTestCase < RUNIT::TestCase
-  
-  def test
+class RCFileTestCase < Test::Unit::TestCase
+  def test_simple
     separators = %w{ = : }
     leading_spaces = [ "", " ", "  " ]
     trailing_spaces = leading_spaces.dup
@@ -15,7 +14,6 @@ class RCFileTestCase < RUNIT::TestCase
     
     num = 0
     tempfile = Tempfile.open("rcfile_test") do |tf|
-      
       tf.puts "# this is a comment"
       tf.puts ""
       
@@ -31,14 +29,13 @@ class RCFileTestCase < RUNIT::TestCase
       end
     end
       
-    rc = RCFile.new(tempfile)
+    rc = RCFile.new tempfile
     (0 ... num).each do |i|
       key = "name#{i}"
       assert_not_nil rc.settings[i]
       pair = rc.settings[i]
       
-      assert_equals [ "name#{i}", "value#{i}" ], rc.settings[i]
+      assert_equal [ "name#{i}", "value#{i}" ], rc.settings[i]
     end
   end
-
 end

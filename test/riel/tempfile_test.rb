@@ -1,16 +1,12 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/tempfile'
 
-class TempfileTestCase < RUNIT::TestCase
-
-  def test
-    tfname = Tempfile.open("tempfile_test") do |tf|
-    end
-
+class TempfileTestCase < Test::Unit::TestCase
+  def test_simple
+    tfname = Tempfile.open("tempfile_test") { }
     assert_not_nil tfname
   end
-
 end

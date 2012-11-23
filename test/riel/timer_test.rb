@@ -1,15 +1,14 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/timer'
 require 'stringio'
 
-class TimerTestCase < RUNIT::TestCase
-
+class TimerTestCase < Test::Unit::TestCase
   TIMER_STRING = "sleep for a second"
 
-  def do_assertions(io)
+  def run_assertions io
     assert_not_nil io
     str = io.string
     assert_not_nil str
@@ -21,12 +20,12 @@ class TimerTestCase < RUNIT::TestCase
 
   def test_to_stdout
     orig_out = $stdout
-    $stdout  = StringIO.new
+    $stdout = StringIO.new
     timer = Timer.new(TIMER_STRING) do
-      sleep(0.1)
+      sleep 0.1
     end
 
-    do_assertions($stdout)
+    run_assertions $stdout
     
     $stdout  = orig_out
   end
@@ -34,10 +33,9 @@ class TimerTestCase < RUNIT::TestCase
   def test_to_io
     stringio = StringIO.new
     timer = Timer.new("sleep for a second", :io => stringio) do
-      sleep(0.1)
+      sleep 0.1
     end
 
-    do_assertions(stringio)
+    run_assertions stringio
   end
-
 end

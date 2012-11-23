@@ -15,9 +15,9 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "riel"
-  s.version = "1.1.8"
+  s.version = "1.1.11"
   s.author = "Jeff Pace"
-  s.email = "jpace@incava.org"
+  s.email = "jeugenepace@gmail.com"
   s.homepage = "http://www.incava.org/projects/riel"
   s.platform = Gem::Platform::RUBY
   s.summary = "Extensions to core Ruby code."

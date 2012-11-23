@@ -226,6 +226,7 @@ module Text
     # Returns the escape sequence for the given names.
     def names_to_code names
       str = ""
+      names = [ names ] unless names.kind_of? Array
       names.each do |name|
         code = ATTRIBUTES[name]
         if code
@@ -295,6 +296,8 @@ module Text
     # Returns the code for the given name.
     def names_to_code names
       str = ""
+
+      names = [ names ] unless names.kind_of? Array
 
       names.each do |name|
         @stack << name

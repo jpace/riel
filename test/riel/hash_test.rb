@@ -1,12 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/hash'
 
-class HashTestCase < RUNIT::TestCase
-
-  def test
+class HashTestCase < Test::Unit::TestCase
+  def test_nothing
   end
-
 end

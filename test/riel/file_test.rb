@@ -1,13 +1,12 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/file'
 require 'riel/tempfile'
 require 'pathname'
 
-
-class FileTestCase < RUNIT::TestCase
+class FileTestCase < Test::Unit::TestCase
 
   def get_file_rootname
     Pathname.new(__FILE__).rootname
@@ -28,7 +27,7 @@ class FileTestCase < RUNIT::TestCase
 
     tempname = nil
 
-    if File.exist?(stringio_so)
+    if File.exist? stringio_so
       rootname = Pathname.new(__FILE__).rootname
       tempname = Tempfile.open(rootname) do |tf|
         tf.write IO.read(stringio_so)
@@ -42,12 +41,12 @@ class FileTestCase < RUNIT::TestCase
 
   def test_file_types
     text_file = create_text_file
-    assert(File.text?(text_file))
-    assert(!File.binary?(text_file))
+    assert File.text?(text_file)
+    assert !File.binary?(text_file)
     
     if binary_file = create_binary_file
-      assert(!File.text?(binary_file))
-      assert(File.binary?(binary_file))
+      assert !File.text?(binary_file)
+      assert File.binary?(binary_file)
     end
   end
 
@@ -56,18 +55,17 @@ class FileTestCase < RUNIT::TestCase
 
     dir = Pathname.new(file).dirname
 
-    assert(File.is_file?(file))
-    assert(!File.is_file?(dir))
+    assert File.is_file?(file)
+    assert !File.is_file?(dir)
 
-    assert(!File.is_directory?(file))
-    assert(File.is_directory?(dir))
+    assert !File.is_directory?(file)
+    assert File.is_directory?(dir)
 
     # this should have access only by root:
 
     file = "/var/log/httpd/error_log"
-    assert(!File.is_file?(file))
-    assert(!File.is_directory?(file))
-    
+    assert !File.is_file?(file)
+    assert !File.is_directory?(file)
   end
 
   def test_read_write_file
@@ -82,7 +80,7 @@ class FileTestCase < RUNIT::TestCase
       line = ln
     end
 
-    assert_equal("hello, world", line)
+    assert_equal "hello, world", line
   end
 
   def test_read_put_file
@@ -97,7 +95,7 @@ class FileTestCase < RUNIT::TestCase
       line = ln
     end
 
-    assert_equal("hello, world\n", line)
+    assert_equal "hello, world\n", line
 
     File.put_file(filename) do
       [
@@ -111,13 +109,13 @@ class FileTestCase < RUNIT::TestCase
       lines << ln
     end
 
-    assert_equal([ "hello, world\n", "this is a test\n" ] , lines)
+    assert_equal [ "hello, world\n", "this is a test\n" ] , lines
   end
 
   def test_open_via_temp_file
     fname = "/tmp/test_open_via_temp_file.#{$$}"
 
-    pn = Pathname.new(fname)
+    pn = Pathname.new fname
 
     assert !pn.exist?
     
@@ -166,13 +164,13 @@ class FileTestCase < RUNIT::TestCase
         assert file.exist?
       end
 
-      File.move_files(tgt, srcfiles)
+      File.move_files tgt, srcfiles
 
-      assert_files_existence(false, srcfiles)
+      assert_files_existence false, srcfiles
 
       tgtfiles = fnums.collect { |num| tgt + "movefile#{num}" }
 
-      assert_files_existence(true, tgtfiles)
+      assert_files_existence true, tgtfiles
     ensure
       if tgt && tgt.exist?
         tgt.children.each do |child|
@@ -217,13 +215,13 @@ class FileTestCase < RUNIT::TestCase
         assert file.exist?
       end
 
-      File.copy_files(tgt, srcfiles)
+      File.copy_files tgt, srcfiles
 
-      assert_files_existence(true, srcfiles)
+      assert_files_existence true, srcfiles
 
       tgtfiles = fnums.collect { |num| tgt + "copyfile#{num}" }
 
-      assert_files_existence(true, tgtfiles)
+      assert_files_existence true, tgtfiles
     ensure
       if tgt && tgt.exist?
         tgt.children.each do |child|
@@ -238,5 +236,4 @@ class FileTestCase < RUNIT::TestCase
       end
     end
   end
-
 end

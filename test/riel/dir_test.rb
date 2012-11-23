@@ -1,13 +1,12 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'pathname'
 require 'riel/dir'
 require 'riel/file'
 
-class DirTestCase < RUNIT::TestCase
-
+class DirTestCase < Test::Unit::TestCase
   def test_home
     assert_equal ENV["HOME"], Dir.home
   end
@@ -15,7 +14,7 @@ class DirTestCase < RUNIT::TestCase
   def test_remove_if_empty
     # set up a mess of files in /tmp ...
 
-    tmpdir = Pathname.new('/tmp')
+    tmpdir = Pathname.new '/tmp'
 
     # maybe this isn't Linux (poor devils!):
     return unless tmpdir.exist?
@@ -46,7 +45,7 @@ class DirTestCase < RUNIT::TestCase
       adir.mkdir
     end
 
-    Dir.remove_if_empty(a, :verbose => false)
+    Dir.remove_if_empty a, :verbose => false
 
     assert !a.exist?
 
@@ -65,7 +64,7 @@ class DirTestCase < RUNIT::TestCase
       end
     end
 
-    Dir.remove_if_empty(a)
+    Dir.remove_if_empty a
     assert a.exist?
 
     Dir.remove_if_empty(a, :deletable => [ %r{aa\d+} ])
@@ -87,10 +86,10 @@ class DirTestCase < RUNIT::TestCase
       end
     end
 
-    Dir.remove_if_empty(a)
+    Dir.remove_if_empty a
     assert a.exist?
 
-    Dir.remove_if_empty(a, :deletable => %w{ foo.bar })
+    Dir.remove_if_empty a, :deletable => %w{ foo.bar }
     assert !a.exist?
 
     testdir.delete

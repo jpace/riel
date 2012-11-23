@@ -1,16 +1,16 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/io'
 
-class IOTestCase < RUNIT::TestCase
+class IOTestCase < Test::Unit::TestCase
   def xtest_readlines
     orig = $/
 
     $/ = nil
 
-    contents = IO.readlines(__FILE__)
+    contents = IO.readlines __FILE__
     
     assert_not_nil contents
     assert contents.size > 0

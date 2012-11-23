@@ -6,14 +6,16 @@ require 'pathname'
 class Dir
 
   # Returns the home directory, for both Unix and Windows.
-  def self.home
-    ENV["HOME"] || begin
-                     hd = ENV["HOMEDRIVE"]
-                     hp = ENV["HOMEPATH"]
-                     if hd || hp
-                       (hd || "") + (hp || "\\")
+  unless RUBY_VERSION.index('1.9')
+    def self.home
+      ENV["HOME"] || begin
+                       hd = ENV["HOMEDRIVE"]
+                       hp = ENV["HOMEPATH"]
+                       if hd || hp
+                         (hd || "") + (hp || "\\")
+                       end
                      end
-                   end
+    end
   end
 
   # Removes directories containing no files or files matching only those in

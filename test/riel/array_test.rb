@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/array'
 
-class ArrayTestCase < RUNIT::TestCase
+class ArrayTestCase < Test::Unit::TestCase
 
   def test_to_s
     a = %w{ this is a test }

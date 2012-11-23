@@ -302,7 +302,7 @@ module OptProc
           @bestopts[0].set_value args
           return @bestopts[0]
         else
-          optstr = @bestopts.collect { |x| '(' + x.tags.join(', ') + ')' }.join(', ')
+          optstr = @bestopts.collect { |y| '(' + y.tags.join(', ') + ')' }.join(', ')
           $stderr.puts "ERROR: ambiguous match of '#{args[0]}'; matches options: #{optstr}"
           exit 2
         end

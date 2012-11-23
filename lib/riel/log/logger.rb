@@ -163,6 +163,7 @@ module RIEL
         stk = caller depth
         for frame in stk
           print_stack_frame frame, cname, msg, lvl, &blk
+          cname = nil
           msg = ""
         end
       end

@@ -1,15 +1,13 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'rubyunit'
+require 'test/unit'
 require 'riel/pathname'
 
-
-class PathnameTestCase < RUNIT::TestCase
-
-  def do_rootname_test(exp, path)
-    pn = Pathname.new(path)
-    assert_equals(exp, pn.rootname)
+class PathnameTestCase < Test::Unit::TestCase
+  def run_rootname_test exp, path
+    pn = Pathname.new path
+    assert_equal exp, pn.rootname
   end
 
   def test_rootname
@@ -21,7 +19,7 @@ class PathnameTestCase < RUNIT::TestCase
       "/a",
       "a"
     ].each do |path|
-      do_rootname_test("a", path)
+      run_rootname_test "a", path
     end
 
     [
@@ -29,8 +27,7 @@ class PathnameTestCase < RUNIT::TestCase
       "/.atest",
       ".atest"
     ].each do |path|
-      do_rootname_test(".atest",  path)
+      run_rootname_test ".atest",  path
     end
   end
-
 end

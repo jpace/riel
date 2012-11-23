@@ -1,0 +1,8 @@
+Thu Nov  1 08:39:11 2012
+
+  log: fixed display of classes in the stack; now only the class is displayed
+  for the top-most object in the frame.
+
+Thu Nov 22 21:21:51 2012
+
+  Updated to work with Ruby 1.9.
