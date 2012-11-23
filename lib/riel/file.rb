@@ -11,7 +11,7 @@ require 'fileutils'
 
 orig_verbose = $VERBOSE
 $VERBOSE = nil
-path = ENV['PATH'].dup
+ENV['PATH'].dup
 $VERBOSE = orig_verbose
 
 class File

@@ -21,7 +21,7 @@ class TimerTestCase < Test::Unit::TestCase
   def test_to_stdout
     orig_out = $stdout
     $stdout = StringIO.new
-    timer = Timer.new(TIMER_STRING) do
+    Timer.new(TIMER_STRING) do
       sleep 0.1
     end
 
@@ -32,7 +32,7 @@ class TimerTestCase < Test::Unit::TestCase
   
   def test_to_io
     stringio = StringIO.new
-    timer = Timer.new("sleep for a second", :io => stringio) do
+    Timer.new("sleep for a second", :io => stringio) do
       sleep 0.1
     end
 

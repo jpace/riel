@@ -27,7 +27,7 @@ class String
   def num
     begin
       Integer self
-    rescue ArgumentError => ae
+    rescue ArgumentError
       nil
     end
   end

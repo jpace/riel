@@ -101,8 +101,7 @@ module OptProc
     def match args, opt = args[0]
       return nil unless %r{^-}.match opt
 
-      tag, val = opt.split('=', 2)
-      tag ||= opt
+      tag = opt.split('=', 2)[0] || opt
 
       @md = nil
       
@@ -114,7 +113,7 @@ module OptProc
     end
 
     def set_value args, opt = args[0]
-      tag, val = opt.split '=', 2
+      val = opt.split('=', 2)[1]
       args.shift
 
       if @md

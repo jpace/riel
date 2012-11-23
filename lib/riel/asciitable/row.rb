@@ -45,7 +45,7 @@ module RIEL
       end
 
       def print
-        banner = (0 .. @table.last_column).collect { |col| bc = BannerCell.new(@char, col, 1) }
+        banner = (0 .. @table.last_column).collect { |col| BannerCell.new(@char, col, 1) }
         bannervalues = banner.collect_with_index do |bc, col| 
           width = @table.column_width col
           bc.formatted_value width, :center
@@ -60,8 +60,6 @@ module RIEL
         lastdatarow = table.data_rows.last
         statrownum = table.last_row + 1
 
-        nrows = lastdatarow + 1 - firstdatarow
-        
         super table, statrownum
         
         ncolumns = @table.last_column
@@ -99,7 +97,7 @@ module RIEL
       def calculate col, fromrow, torow
         nrows = torow + 1 - fromrow
         total = @table.column(col).total fromrow, torow
-        avg = total / nrows
+        total / nrows
       end
     end
   end

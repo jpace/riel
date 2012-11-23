@@ -31,10 +31,7 @@ class RCFileTestCase < Test::Unit::TestCase
       
     rc = RCFile.new tempfile
     (0 ... num).each do |i|
-      key = "name#{i}"
       assert_not_nil rc.settings[i]
-      pair = rc.settings[i]
-      
       assert_equal [ "name#{i}", "value#{i}" ], rc.settings[i]
     end
   end
