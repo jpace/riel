@@ -7,7 +7,6 @@ require 'riel/text'
 require 'riel/enumerable'
 
 module OptProc
-
   class Option
     include Loggable
 
@@ -142,8 +141,6 @@ module OptProc
             args.shift
           end
         end
-      else
-        # log { "no type" }
       end
 
       value = value_from_match
@@ -187,22 +184,16 @@ module OptProc
     end
 
     def to_boolean val
-      %w{ yes true on soitenly }.include?(val.downcase)
+      %w{ yes true on soitenly }.include? val.downcase
     end
 
     def set val, opt = nil, args = nil
-      # log { "argtype: #{@argtype}; md: #{@md.inspect}" }
-
       setargs = [ val, opt, args ].select_with_index { |x, i| i < @set.arity }
-      # log "val: #{val}"
       @set.call(*setargs)
     end
   end
 
-
   class OptionSet
-    include Loggable
-
     attr_reader :options
     
     def initialize data
@@ -237,20 +228,6 @@ module OptProc
           end
         end
       end
-
-      if false
-        [ @longopts, @shortopts ].each do |list|
-          list.each_with_index do |v, idx|
-            log { "#{idx} => #{v.inspect}" }
-          end
-        end
-        [ @regexps ].each do |map|
-          map.each do |k, v|
-            log { "#{k} => #{v.inspect}" }
-          end
-        end
-      end
-
     end
 
     COMBINED_OPTS_RES = [
@@ -263,14 +240,9 @@ module OptProc
     def process_option args
       opt = args[0]
 
-      # log { "processing option #{opt}" }
-
       if md = COMBINED_OPTS_RES.collect { |re| re.match opt }.detect
         lhs = md[1]
         rhs = "-" + md[2]
-
-        # log { "lhs, rhs: #{lhs.inspect}, #{rhs.inspect}" }
-        
         args[0, 1] = lhs, rhs
         
         return process_option args
@@ -285,7 +257,6 @@ module OptProc
                       @shortopts[ch]
                     end
 
-        # log { "opts: #{assocopts.inspect}" }
         if assocopts && x = set_option(assocopts, args)
           return x
         end
@@ -294,9 +265,6 @@ module OptProc
       if x = set_option(@options, args)
         return x
       elsif @bestmatch
-        # what's the best match here ...?
-        log { "bestmatch: #{@bestmatch}" }
-        log { "bestopts : #{@bestopts.inspect}" }
         if @bestopts.size == 1
           @bestopts[0].set_value args
           return @bestopts[0]
@@ -315,20 +283,17 @@ module OptProc
       @bestopts  = Array.new
       
       optlist.each do |option|
-        if mv = option.match(args)
-          if mv >= 1.0
-            # exact match:
-            option.set_value args
-            return option
-          elsif !@bestmatch || @bestmatch <= mv
-            @bestmatch = mv
-            @bestopts  << option
-          end
+        next unless mv = option.match(args)
+        if mv >= 1.0
+          # exact match:
+          option.set_value args
+          return option
+        elsif !@bestmatch || @bestmatch <= mv
+          @bestmatch = mv
+          @bestopts  << option
         end
       end
       nil
     end
-    
   end
-
 end

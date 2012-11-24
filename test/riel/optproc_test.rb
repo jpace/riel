@@ -205,9 +205,9 @@ class OptProcTestCase < Test::Unit::TestCase
 
   def test_value_regexp
     @range_start = nil
-    opt = OptProc::Option.new(:tags    => %w{ --after },
-                              :arg     => [ :required, :regexp, %r{ ^ (\d+%?) $ }x ],
-                              :set     => Proc.new { |md| @range_start = md[1] })
+    opt = OptProc::Option.new(:tags => %w{ --after },
+                              :arg  => [ :required, :regexp, %r{ ^ (\d+%?) $ }x ],
+                              :set  => Proc.new { |md| @range_start = md[1] })
     
     %w{ 5 5% 10 90% }.each do |rg|
       [

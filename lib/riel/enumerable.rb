@@ -2,8 +2,7 @@
 # -*- ruby -*-
 
 module Enumerable
-
-  def collect_with_index(&blk)
+  def collect_with_index &blk
     ary = []
     self.each_with_index do |item, idx|
       ary << blk.call(item, idx)
@@ -13,7 +12,7 @@ module Enumerable
 
   NOT_NIL = Object.new
 
-  def select_with_index(arg = NOT_NIL, &blk)
+  def select_with_index arg = NOT_NIL, &blk
     ary = []
     self.each_with_index do |item, idx|
       ary << item if _match?(arg, item, idx, &blk)
@@ -21,7 +20,7 @@ module Enumerable
     ary
   end
 
-  def detect_with_index(arg = NOT_NIL, &blk)
+  def detect_with_index arg = NOT_NIL, &blk
     self.each_with_index do |item, idx|
       return item if _match?(arg, item, idx, &blk)
     end
@@ -35,7 +34,7 @@ module Enumerable
 
   origw = $-w
   $-w = false
-  def select(arg = NOT_NIL, &blk)
+  def select arg = NOT_NIL, &blk
     ary = []
     self.each_with_index do |item, idx|
       ary << item if _match?(arg, item, idx, &blk)
@@ -43,7 +42,7 @@ module Enumerable
     ary
   end
 
-  def detect(arg = NOT_NIL, &blk)
+  def detect arg = NOT_NIL, &blk
     self.each_with_index do |item, idx|
       return item if _match?(arg, item, idx, &blk)
     end
@@ -51,7 +50,7 @@ module Enumerable
   end
   $-w = origw
 
-  def _match?(arg, item, idx, &blk)
+  def _match? arg, item, idx, &blk
     if blk 
       args = [ item ]
       args << idx if idx && blk.arity > 1
@@ -62,5 +61,4 @@ module Enumerable
       arg == item
     end
   end
-  
 end
