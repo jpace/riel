@@ -2,7 +2,6 @@
 # -*- ruby -*-
 
 class Array 
-
   $-w = false
 
   # Wraps the array with brackets, and inserts a comma and a space between
@@ -17,5 +16,4 @@ class Array
   def rand
     return self[Kernel.rand length]
   end
-  
 end
