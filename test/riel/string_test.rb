@@ -52,9 +52,4 @@ class StringToRangeTestCase < Test::Unit::TestCase
     assert_equal "foo", "food" - "d"
     assert_equal "fd",  "food" - %r{o+}
   end
-
-  def test_highlight
-    assert_equal "...\e[34mthis\e[0m... is blue", "...this... is blue".highlight(%r{this}, "blue")
-    assert_equal "...\e[34m\e[42mthis\e[0m... is blue", "...this... is blue".highlight(%r{this}, "blue on green")
-  end
 end

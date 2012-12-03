@@ -10,3 +10,8 @@ Thu Nov 22 21:21:51 2012
 Sat Dec  1 16:08:00 2012
 
   Added README.md.
+
+Sun Dec  2 22:12:46 2012
+
+  Added Command documentation to README.
+

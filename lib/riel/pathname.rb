@@ -6,7 +6,6 @@ require 'riel/string'
 require 'fileutils'
 
 class Pathname
-
   # a compliment to the +dirname+, +basename+, and +extname+ family, this returns
   # the basename without the extension, e.g. "foo" from "/usr/share/lib/foo.bar".
   def rootname
@@ -24,5 +23,4 @@ class Pathname
   def mkdirs
     File.makedirs to_s
   end
-
 end

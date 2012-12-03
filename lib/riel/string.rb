@@ -13,7 +13,6 @@ require 'riel/text'
 #
 
 class String
-
   #
   # Returns whether the string ends with the given substring.
   #
@@ -74,17 +73,17 @@ class String
   #    "1-".to_ranges :min => 0, :max => 8               # [ 1 .. 8 ]
   # 
   def to_ranges args = Hash.new
-    min      = args[:min] || -Infinity
-    max      = args[:max] || Infinity
+    min = args[:min] || -Infinity
+    max = args[:max] || Infinity
     collapse = args[:collapse]
     
     ranges = Array.new
     self.split(%r{\s*,\s*}).each do |section|
-      md   = section.match(RANGE_REGEXP)
+      md = section.match(RANGE_REGEXP)
       next unless md
       
       from = String._matchdata_to_number md, 1, min
-      to   = String._has_matchdata?(md, 2) ? String._matchdata_to_number(md, 3, max) : from
+      to = String._has_matchdata?(md, 2) ? String._matchdata_to_number(md, 3, max) : from
 
       prevrange = ranges[-1]
 
@@ -99,20 +98,6 @@ class String
   end
 
   # :stopdoc:
-  HIGHLIGHTER = ::Text::ANSIHighlighter.new
-  # :startdoc:
-  
-  # 
-  # Returns a highlighted (colored) version of the string, applying the regular
-  # expressions in the array, which are paired with the desired color.
-  #
-  def highlight re, color
-    gsub(re) do |match|
-      HIGHLIGHTER.color color, match
-    end
-  end
-
-  # :stopdoc:
   def self._has_matchdata? md, idx
     md && md[idx] && !md[idx].empty?
   end
@@ -121,5 +106,4 @@ class String
     _has_matchdata?(md, idx) ? md[idx].to_i : default
   end
   # :startdoc:
-
 end

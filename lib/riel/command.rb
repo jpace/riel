@@ -3,7 +3,6 @@
 #!ruby -w
 
 class Command
-
   # Runs the given command and arguments, returning the lines of output. If a
   # block is provided, then it will be called with each line of output. If the
   # block takes two arguments, then the line number is also passed to the block.

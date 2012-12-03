@@ -24,11 +24,11 @@ class IOTestCase < Test::Unit::TestCase
     writelines << "this is line one"
     writelines << "line two is this"
 
-    puts "writelines: <<<#{writelines}>>>"
-    
     IO.writelines name, writelines
 
     readlines = IO::readlines name
     assert_equal writelines.collect { |line| line + "\n" }, readlines
+
+    File.delete name
   end
 end

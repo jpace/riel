@@ -92,7 +92,7 @@ class TextTestCase < Test::Unit::TestCase
 
     str = "precision"
 
-    # this tests that string.reverse does not mean ANSI reverse
+    # string.reverse does not mean ANSI reverse:
     assert_equal "noisicerp", str.reverse
   end
 end

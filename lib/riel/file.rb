@@ -206,5 +206,4 @@ class File
     end
     tgt
   end
-  
 end

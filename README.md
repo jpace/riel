@@ -17,3 +17,8 @@ in the format: [ "this", "is", "a", "test" ], instead of the default,
 The `rand` method, equivalent to Array#sample, returns a random element from an
 array.
 
+### Command
+
+The method `run` runs a command, returning the lines of output, and optionally
+calling a block with each line, and the line number, if the block takes two
+arguments.
