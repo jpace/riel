@@ -4,41 +4,68 @@
 require 'riel/text/highlight'
 
 module Text
+  class ANSIColor
+    def initialize code
+      @code = code
+    end
+
+    def str
+      "\e[#{@code}m"
+    end
+  end
+
+  class ANSIList
+    attr_reader :colors
+
+    def initialize colors
+      @colors = colors
+    end
+  end
+
+  class ANSIAttributes < ANSIList
+    def initialize 
+      super Hash[
+                 'none'       => '0', 
+                 'reset'      => '0',
+                 'bold'       => '1',
+                 'underscore' => '4',
+                 'underline'  => '4',
+                 'blink'      => '5',
+                 'negative'   => '7',
+                 'concealed'  => '8',
+                ]
+    end
+  end
+
+  class ANSIColors < ANSIList
+    COLORS = [ :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white ]
+
+    def initialize colors, start
+      color_to_code = Hash.new
+      colors.each_with_index { |color, idx| color_to_code[color.to_s] = start + idx }
+      super color_to_code
+    end
+  end
+
+  class ANSIForegrounds < ANSIColors
+    def initialize 
+      super COLORS, 30
+    end
+  end
+
+  class ANSIBackgrounds < ANSIColors
+    def initialize 
+      on_colors = COLORS.collect { |color| "on_#{color}" }
+      super on_colors, 40
+    end
+  end
+
   # Highlights using ANSI escape sequences.
   class ANSIHighlighter < Highlighter
-    ATTRIBUTES = Hash[
-                      'none'       => '0', 
-                      'reset'      => '0',
-                      'bold'       => '1',
-                      'underscore' => '4',
-                      'underline'  => '4',
-                      'blink'      => '5',
-                      'negative'   => '7',
-                      'concealed'  => '8',
-                      'black'      => '30',
-                      'red'        => '31',
-                      'green'      => '32',
-                      'yellow'     => '33',
-                      'blue'       => '34',
-                      'magenta'    => '35',
-                      'cyan'       => '36',
-                      'white'      => '37',
-                      'on_black'   => '40',
-                      'on_red'     => '41',
-                      'on_green'   => '42',
-                      'on_yellow'  => '43',
-                      'on_blue'    => '44',
-                      'on_magenta' => '45',
-                      'on_cyan'    => '46',
-                      'on_white'   => '47',
-                     ]
-
-    RESET = "\e[0m"
-
-    def initialize colors = DEFAULT_COLORS
-      super
-      @code = nil
-    end
+    ATTRIBUTES = Hash.new
+    [ ANSIAttributes, ANSIForegrounds, ANSIBackgrounds ].each { |cls| colors = cls.new.colors; ATTRIBUTES.merge!(colors) }
+    
+    RESET = ANSIColor.new(0)
 
     def codes names
       names.collect { |name| ATTRIBUTES[name] }.compact
@@ -47,17 +74,12 @@ module Text
     # Returns the escape sequence for the given names.
     def names_to_code names
       names = [ names ] unless names.kind_of? Array
-      codes(names).collect { |code| "\e[#{code}m" }.join ''
+      names.collect { |name| "\e[#{ATTRIBUTES[name]}m" }.join ''
     end
 
-    def highlight str
-      @code ||= begin
-                  @code = @colors.collect do |color|
-                    names_to_code color
-                  end.join ''
-                end
-      
-      @code + str + RESET
+    def rgb red, green, blue
+      # color = TermColor ...
+      @@highlighter.rgb red, green, blue
     end
   end
 end

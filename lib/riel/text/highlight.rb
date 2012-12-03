@@ -80,7 +80,7 @@ module Text
 
     attr_reader :colors
     
-    def self.parse_colors str
+    def parse_colors str
       str.scan(Regexp.new(COLORS_RE)).collect do |color|
         color[0] ? "on_" + color[0] : color[1]
       end
@@ -121,18 +121,16 @@ module Text
     # colorized and the stream is reset. Otherwise, only the code for the given
     # color name is returned.
     
-    def color colorstr, obj = self, &blk
-      #                       ^^^^ this is the Module self
-      colornames = self.class.parse_colors colorstr
+    def color colorstr, obj = nil, &blk
+      colornames = parse_colors colorstr
       result = names_to_code colornames
       
       if blk
         result << blk.call
-        result << names_to_code("reset")
       elsif obj.kind_of? String
         result << obj
-        result << names_to_code("reset")
       end
+      result << names_to_code("reset")
       result
     end
 
@@ -148,7 +146,6 @@ module Text
     #     bold green on yellow
     #     underscore bold magenta on cyan
     #     underscore red on cyan
-
     def code str
       fg, bg = str.split(/\s*\bon_?\s*/)
       (fg ? foreground(fg) : "") + (bg ? background(bg) : "")

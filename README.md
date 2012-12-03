@@ -22,3 +22,7 @@ array.
 The method `run` runs a command, returning the lines of output, and optionally
 calling a block with each line, and the line number, if the block takes two
 arguments.
+
+### ANSIHighlighter
+
+This class processes strings, wrapping them in ANSI colors.

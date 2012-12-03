@@ -35,13 +35,17 @@ module Text
                       when Text::Highlighter::NONE, "NONE", nil
                         Text::NonHighlighter.new
                       when Text::Highlighter::HTML, "HTML"
-                        Text::HTMLHighlighter.new
+                        Text::HTMLHighlighter.new Text::Highlighter::DEFAULT_COLORS
                       when Text::Highlighter::ANSI, "ANSI"
-                        Text::ANSIHighlighter.new
+                        Text::ANSIHighlighter.new Text::Highlighter::DEFAULT_COLORS
                       else
                         Text::NonHighlighter.new
                       end
       
+    end
+
+    def rgb red, green, blue
+      @@highlighter.rgb red, green, blue
     end
 
     def self.add_to cls

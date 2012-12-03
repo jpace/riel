@@ -23,6 +23,7 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     run_ansi_test str, str.blink,          5 # every geocities site circa 1998
     run_ansi_test str, str.negative,       7
     run_ansi_test str, str.concealed,      8
+
     run_ansi_test str, str.black,         30
     run_ansi_test str, str.red,           31
     run_ansi_test str, str.green,         32
@@ -31,6 +32,7 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     run_ansi_test str, str.magenta,       35
     run_ansi_test str, str.cyan,          36
     run_ansi_test str, str.white,         37
+
     run_ansi_test str, str.on_black,      40
     run_ansi_test str, str.on_red,        41
     run_ansi_test str, str.on_green,      42
@@ -47,13 +49,19 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
   end
 
   def test_highlighter
-    hl = Text::ANSIHighlighter.new 
+    hl = Text::ANSIHighlighter.new Text::Highlighter::DEFAULT_COLORS
     assert_equal "\e[1m", hl.code('bold')
   end
 
   def test_gsub
-    hl = Text::ANSIHighlighter.new
+    hl = Text::ANSIHighlighter.new Text::Highlighter::DEFAULT_COLORS
     assert_equal "...\e[34mthis\e[0m... is blue", hl.gsub("...this... is blue", %r{this}, "blue")
     assert_equal "...\e[34m\e[42mthis\e[0m... is blue", hl.gsub("...this... is blue", %r{this}, "blue on green")
+  end
+
+  def test_rgb
+    hl = Text::ANSIHighlighter.new Text::Highlighter::DEFAULT_COLORS
+    Text::Highlightable.add_to String
+    # assert_equal "\x1[...mblue", "blue".rgb(1, 2, 3)
   end
 end
