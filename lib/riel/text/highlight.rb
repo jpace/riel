@@ -100,10 +100,6 @@ module Text
       all_colors
     end
     
-    def initialize colors
-      @colors = colors
-    end
-
     def highlight str
       # implemented by subclasses
     end

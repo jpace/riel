@@ -12,9 +12,7 @@ module Text
   # Thus, no magenta or cyan.
 
   class HTMLHighlighter < Highlighter
-    def initialize colors
-      super
-      
+    def initialize
       # we need to know what we're resetting from (bold, font, underlined ...)
       @stack = []
     end

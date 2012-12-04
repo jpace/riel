@@ -2,7 +2,7 @@
 # -*- ruby -*-
 
 require 'test/unit'
-require 'riel/text/ansi_highlight'
+require 'riel/text/ansi/ansi_highlight'
 require 'riel/text/string'
 
 class StringTestCase < Test::Unit::TestCase
