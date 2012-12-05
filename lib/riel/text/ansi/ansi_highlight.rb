@@ -7,6 +7,7 @@ require 'riel/text/ansi/ansi_colors'
 require 'riel/text/ansi/ansi_decorations'
 require 'riel/text/ansi/ansi_foregrounds'
 require 'riel/text/ansi/ansi_backgrounds'
+require 'riel/text/ansi/term_rgb_color'
 
 module Text
   # Highlights using ANSI escape sequences.
@@ -30,10 +31,8 @@ module Text
                      ]
     
     ATTRIBUTES = Hash.new
-    [ ANSIAttributes, ANSIForegrounds, ANSIBackgrounds ].each { |cls| colors = cls.new.colors; ATTRIBUTES.merge!(colors) }
+    [ ANSIAttributes, ANSIForegrounds, ANSIBackgrounds ].each { |cls| ATTRIBUTES.merge! cls.new.colors }
     
-    RESET = ANSIColor.new(0)
-
     def codes names
       names.collect { |name| ATTRIBUTES[name] }.compact
     end
@@ -41,12 +40,13 @@ module Text
     # Returns the escape sequence for the given names.
     def names_to_code names
       names = [ names ] unless names.kind_of? Array
-      names.collect { |name| "\e[#{ATTRIBUTES[name]}m" }.join ''
+      names.collect { |name| ATTRIBUTES[name].str }.join ''
     end
 
-    def rgb red, green, blue
+    def rgb str, red, green, blue
       # color = TermColor ...
-      @@highlighter.rgb red, green, blue
+      color = TermRGB.new red, green, blue
+      color.fg + str + color.reset
     end
   end
 end

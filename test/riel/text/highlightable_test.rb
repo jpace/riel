@@ -18,4 +18,10 @@ class HighlightableTestCase < Test::Unit::TestCase
   def test_string_include
     assert_equal "\e[34mfoo\e[0m", "foo".blue
   end
+
+  def test_string_respond_to
+    str = ""
+    assert str.respond_to? :blue
+    assert !str.respond_to?(:teal)
+  end
 end

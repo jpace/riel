@@ -16,37 +16,7 @@ module Text
   
   class Highlighter
     VERSION = "1.0.4"
-    ATTRIBUTES = %w{
-      none
-      reset
-      bold
-      underscore
-      underline
-      blink
-      negative
-      concealed
-      black
-      red
-      green
-      yellow
-      blue
-      magenta
-      cyan
-      white
-      on_black
-      on_red
-      on_green
-      on_yellow
-      on_blue
-      on_magenta
-      on_cyan
-      on_white
-    }
     
-    NONE = Object.new
-    HTML = Object.new
-    ANSI = Object.new
-
     COLORS      = %w{ black red green yellow blue magenta cyan white }
     DECORATIONS = %w{ none reset bold underscore underline blink negative concealed }
 

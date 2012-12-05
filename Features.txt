@@ -15,3 +15,6 @@ Sun Dec  2 22:12:46 2012
 
   Added Command documentation to README.
 
+Tue Dec  4 19:54:37 2012
+
+  Added rgb coloring to strings, using extended ANSI codes.

@@ -23,7 +23,7 @@ class FileTestCase < Test::Unit::TestCase
   end
 
   def create_binary_file
-    stringio_so = "/usr/lib/ruby/1.8/i386-linux/stringio.so"
+    stringio_so = '/usr/lib/ruby/1.9.1/x86_64-linux/socket.so'
 
     tempname = nil
 
@@ -39,14 +39,25 @@ class FileTestCase < Test::Unit::TestCase
     tempname
   end
 
-  def test_file_types
+  def test_text_is_text
     text_file = create_text_file
     assert File.text?(text_file)
+  end
+
+  def test_text_is_not_binary
+    text_file = create_text_file
     assert !File.binary?(text_file)
-    
+  end
+
+  def test_binary_is_binary
+    if binary_file = create_binary_file
+      assert File.binary?(binary_file)
+    end
+  end
+
+  def test_binary_is_not_binary
     if binary_file = create_binary_file
       assert !File.text?(binary_file)
-      assert File.binary?(binary_file)
     end
   end
 

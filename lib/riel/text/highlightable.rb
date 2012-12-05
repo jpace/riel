@@ -27,7 +27,7 @@ module Text
     end
 
     def respond_to? meth
-      super
+      Text::Highlighter::all_colors.include?(meth.to_s) || super
     end
 
     # Sets the highlighter for this class. This can be either by type or by
@@ -36,11 +36,11 @@ module Text
       @@highlighter = case hl
                       when Text::Highlighter
                         hl
-                      when Text::Highlighter::NONE, "NONE", nil
+                      when :none, "NONE", nil
                         Text::NonHighlighter.new
-                      when Text::Highlighter::HTML, "HTML"
+                      when :html, "HTML"
                         Text::HTMLHighlighter.new
-                      when Text::Highlighter::ANSI, "ANSI"
+                      when :ansi, "ANSI"
                         Text::ANSIHighlighter.new
                       else
                         Text::NonHighlighter.new
@@ -49,7 +49,7 @@ module Text
     end
 
     def rgb red, green, blue
-      @@highlighter.rgb red, green, blue
+      @@highlighter.rgb self, red, green, blue
     end
 
     def self.add_to cls
