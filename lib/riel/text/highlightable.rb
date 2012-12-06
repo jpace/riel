@@ -14,7 +14,7 @@ module Text
 
     # this dynamically adds methods for individual colors.
     def method_missing(meth, *args, &blk)
-      if Text::Highlighter::all_colors.include? meth.to_s
+      if has_color? meth.to_s
         methdecl = Array.new
         methdecl << "def #{meth}(&blk)"
         methdecl << "  @@highlighter.color(\"#{meth}\", self, &blk)"
@@ -27,7 +27,11 @@ module Text
     end
 
     def respond_to? meth
-      Text::Highlighter::all_colors.include?(meth.to_s) || super
+      has_color?(meth.to_s) || super
+    end
+
+    def has_color? color
+      Text::Highlighter::all_colors.include? color
     end
 
     # Sets the highlighter for this class. This can be either by type or by

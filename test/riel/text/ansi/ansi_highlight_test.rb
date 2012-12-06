@@ -59,9 +59,9 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
   end
 
   def test_rgb
-    hl = Text::ANSIHighlighter.new
     Text::Highlightable.add_to String
     str = "123".rgb(1, 2, 3)
-    assert_equal "\x1b[38;5;67m123\e[0m", "123".rgb(1, 2, 3)
+    # puts str
+    assert_equal "\x1b[38;5;67m123\e[0m", str
   end
 end

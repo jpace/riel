@@ -44,7 +44,6 @@ module Text
     end
 
     def rgb str, red, green, blue
-      # color = TermColor ...
       color = TermRGB.new red, green, blue
       color.fg + str + color.reset
     end
