@@ -22,3 +22,7 @@ Tue Dec  4 19:54:37 2012
 Wed Dec  5 20:00:28 2012
 
   Added documentation for SetDiff and String.color.
+
+Thu Dec  6 08:40:24 2012
+
+  Added aliases for rgb. (AnsiHighlightTestCase#test_rgb_fg_alias)

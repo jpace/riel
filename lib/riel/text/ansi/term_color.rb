@@ -4,6 +4,8 @@
 class TermColor
   BOLD = "\e[1m"
   RESET = "\x1b[0m"
+
+  # \e1 == \x1b
   
   def fg
     str 38

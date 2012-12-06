@@ -8,10 +8,13 @@ require 'riel/text/ansi/ansi_decorations'
 require 'riel/text/ansi/ansi_foregrounds'
 require 'riel/text/ansi/ansi_backgrounds'
 require 'riel/text/ansi/term_rgb_color'
+require 'singleton'
 
 module Text
   # Highlights using ANSI escape sequences.
   class ANSIHighlighter < Highlighter
+    include Singleton
+    
     DEFAULT_COLORS = [
                       "black on yellow",
                       "black on green",
@@ -32,6 +35,10 @@ module Text
     
     ATTRIBUTES = Hash.new
     [ ANSIAttributes, ANSIForegrounds, ANSIBackgrounds ].each { |cls| ATTRIBUTES.merge! cls.new.colors }
+
+    def initialize 
+      @aliases = Hash.new
+    end
     
     def codes names
       names.collect { |name| ATTRIBUTES[name] }.compact
@@ -46,6 +53,32 @@ module Text
     def rgb str, red, green, blue
       color = TermRGB.new red, green, blue
       color.fg + str + color.reset
+    end
+
+    def add_alias name, red, green, blue
+      @aliases[name] = TermRGB.new red, green, blue
+    end
+
+    def has_alias? name
+      @aliases.include? name
+    end
+
+    def respond_to? meth
+      has_alias? meth
+    end
+
+    def method_missing(meth, *args, &blk)
+      if has_alias? meth
+        methdecl = Array.new
+        methdecl << "def #{meth}(str, &blk);"
+        methdecl << "  color = @aliases[:#{meth}];"
+        methdecl << "  color.fg + str + color.reset;"
+        methdecl << "end"
+        self.class.class_eval methdecl.join("\n")
+        send meth, *args, &blk
+      else
+        super
+      end
     end
   end
 end

@@ -74,14 +74,6 @@ module Text
       # implemented by subclasses
     end
 
-    def to_s
-      (@colors || '').join(' ')
-    end
-
-    def == other
-      return @colors.sort == other.colors.sort
-    end
-
     # Colorizes the given object. If a block is passed, its return value is used
     # and the stream is reset. If a String is provided as the object, it is
     # colorized and the stream is reset. Otherwise, only the code for the given
@@ -93,8 +85,8 @@ module Text
       
       if blk
         result << blk.call
-      elsif obj.kind_of? String
-        result << obj
+      elsif obj.respond_to? :to_s
+        result << obj.to_s
       end
       result << names_to_code("reset")
       result

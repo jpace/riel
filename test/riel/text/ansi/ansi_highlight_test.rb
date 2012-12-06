@@ -48,12 +48,12 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
   end
 
   def test_highlighter
-    hl = Text::ANSIHighlighter.new
+    hl = Text::ANSIHighlighter.instance
     assert_equal "\e[1m", hl.code('bold')
   end
 
   def test_gsub
-    hl = Text::ANSIHighlighter.new
+    hl = Text::ANSIHighlighter.instance
     assert_equal "...\e[34mthis\e[0m... is blue",       hl.gsub("...this... is blue", %r{this}, "blue")
     assert_equal "...\e[34m\e[42mthis\e[0m... is blue", hl.gsub("...this... is blue", %r{this}, "blue on green")
   end
@@ -61,7 +61,31 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
   def test_rgb
     Text::Highlightable.add_to String
     str = "123".rgb(1, 2, 3)
-    # puts str
     assert_equal "\x1b[38;5;67m123\e[0m", str
+  end
+
+  def test_multiple
+    Text::Highlightable.add_to String
+    str = "ABC".bold.blue.on_green
+    assert_equal "\e[42m\e[34m\e[1mABC\e[0m\e[0m\e[0m", str
+  end
+
+  def test_multiple_add_to
+    Text::Highlightable.add_to String
+    Text::Highlightable.add_to Integer
+    str = "ABC".blue
+    int = 123.red
+    # puts str + int.to_s
+    assert_equal "\e[34mABC\e[0m\e[31m123\e[0m", str + int
+  end
+
+  def test_rgb_fg_alias
+    Text::Highlightable.add_to String
+    hl = Text::ANSIHighlighter.instance 
+    hl.add_alias :teal, 1, 4, 4
+    
+    str = "ABC".teal
+    # puts str
+    assert_equal "\x1b[38;5;80mABC\e[0m", str
   end
 end
