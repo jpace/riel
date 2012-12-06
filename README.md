@@ -25,4 +25,12 @@ arguments.
 
 ### ANSIHighlighter
 
-This class processes strings, wrapping them in ANSI colors.
+This class processes strings, wrapping them in ANSI colors. For example:
+
+    "foo".blue
+    "bar".bold.blue.on_white
+
+### SetDiff
+
+This class compares enumerables as sets, A fully including B, B fully including
+A, or A and B having common elements.

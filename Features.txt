@@ -18,3 +18,7 @@ Sun Dec  2 22:12:46 2012
 Tue Dec  4 19:54:37 2012
 
   Added rgb coloring to strings, using extended ANSI codes.
+
+Wed Dec  5 20:00:28 2012
+
+  Added documentation for SetDiff and String.color.
