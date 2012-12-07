@@ -6,6 +6,14 @@ class TermColor
   RESET = "\x1b[0m"
 
   # \e1 == \x1b
+
+  def initialize type = :fg
+    @type = type
+  end
+
+  def to_s
+    @type == :fg ? fg : bg
+  end
   
   def fg
     str 38

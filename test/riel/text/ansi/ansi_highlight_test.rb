@@ -88,4 +88,14 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     # puts str
     assert_equal "\x1b[38;5;80mABC\e[0m", str
   end
+
+  def test_rgb_bg_alias
+    Text::Highlightable.add_to String
+    hl = Text::ANSIHighlighter.instance 
+    hl.add_alias :on_maroon, 1, 0, 2
+    
+    str = "ABC".on_maroon
+    # puts str
+    assert_equal "\x1b[48;5;54mABC\e[0m", str
+  end
 end

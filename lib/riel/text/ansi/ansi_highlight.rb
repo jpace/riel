@@ -56,7 +56,9 @@ module Text
     end
 
     def add_alias name, red, green, blue
-      @aliases[name] = TermRGB.new red, green, blue
+      type = name.to_s[0 .. 2] == 'on_' ? :bg : :fg
+      color = TermRGB.new red, green, blue, type
+      @aliases[name] = color
     end
 
     def has_alias? name
@@ -72,7 +74,7 @@ module Text
         methdecl = Array.new
         methdecl << "def #{meth}(str, &blk);"
         methdecl << "  color = @aliases[:#{meth}];"
-        methdecl << "  color.fg + str + color.reset;"
+        methdecl << "  color.to_s + str + color.reset;"
         methdecl << "end"
         self.class.class_eval methdecl.join("\n")
         send meth, *args, &blk
