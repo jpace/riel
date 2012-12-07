@@ -47,7 +47,7 @@ module Text
     # Returns the escape sequence for the given names.
     def names_to_code names
       names = [ names ] unless names.kind_of? Array
-      names.collect { |name| ATTRIBUTES[name].str }.join ''
+      names.collect { |name| ATTRIBUTES[name].to_s }.join ''
     end
 
     def rgb str, red, green, blue
