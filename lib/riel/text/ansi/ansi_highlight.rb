@@ -7,6 +7,7 @@ require 'riel/text/ansi/ansi_colors'
 require 'riel/text/ansi/attributes'
 require 'riel/text/ansi/foregrounds'
 require 'riel/text/ansi/backgrounds'
+require 'riel/text/ansi/grey'
 require 'riel/text/ansi/rgb_color'
 require 'singleton'
 
@@ -50,15 +51,34 @@ module Text
       names.collect { |name| ATTRIBUTES[name].to_s }.join ''
     end
 
-    def rgb str, red, green, blue
+    def to_rgb str, red, green, blue, meth
       color = RGBColor.new red, green, blue
-      color.fg + str + color.reset
+      color.send(meth) + str + color.reset
+    end
+
+    def rgb str, red, green, blue
+      to_rgb str, red, green, blue, :fg
     end
 
     def on_rgb str, red, green, blue
-      color = RGBColor.new red, green, blue
-      color.bg + str + color.reset
+      to_rgb str, red, green, blue, :bg
     end
+
+    def to_grey str, value, meth
+      color = Grey.new 232 + value
+      color.send(meth) + str + color.reset
+    end
+
+    def grey str, value
+      to_grey str, value, :fg
+    end
+
+    def on_grey str, value
+      to_grey str, value, :bg
+    end
+
+    alias_method :gray, :grey
+    alias_method :on_gray, :on_grey
 
     def add_alias name, red, green, blue
       type = name.to_s[0 .. 2] == 'on_' ? :bg : :fg

@@ -10,6 +10,10 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     escape_sequence = chars.collect { |ch| "\e[#{ch}m" }.join("")
     assert_equal "#{escape_sequence}#{str}\e[0m", input
   end
+
+  def setup
+    Text::Highlightable.add_to String
+  end
   
   def test_ansi_highlight
     str = "precision"
@@ -59,25 +63,41 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
   end
 
   def test_rgb
-    Text::Highlightable.add_to String
     str = "123".rgb(1, 2, 3)
     assert_equal "\x1b[38;5;67m123\e[0m", str
   end
 
   def test_on_rgb
-    Text::Highlightable.add_to String
     str = "123".on_rgb(1, 2, 3)
     assert_equal "\x1b[48;5;67m123\e[0m", str
   end
 
+  def test_grey
+    str = "123".grey(14)
+    assert_equal "\x1b[38;5;246m123\e[0m", str
+  end
+
+  def test_on_grey
+    str = "123".on_grey(4)
+    assert_equal "\x1b[48;5;236m123\e[0m", str
+  end
+
+  def test_gray
+    str = "123".gray(14)
+    assert_equal "\x1b[38;5;246m123\e[0m", str
+  end
+
+  def test_on_gray
+    str = "123".on_gray(4)
+    assert_equal "\x1b[48;5;236m123\e[0m", str
+  end
+
   def test_multiple
-    Text::Highlightable.add_to String
     str = "ABC".bold.blue.on_green
     assert_equal "\e[42m\e[34m\e[1mABC\e[0m\e[0m\e[0m", str
   end
 
   def test_multiple_add_to
-    Text::Highlightable.add_to String
     Text::Highlightable.add_to Integer
     str = "ABC".blue
     int = 123.red
@@ -86,7 +106,6 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
   end
 
   def test_rgb_fg_alias
-    Text::Highlightable.add_to String
     hl = Text::ANSIHighlighter.instance 
     hl.add_alias :teal, 1, 4, 4
     
@@ -96,7 +115,6 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
   end
 
   def test_rgb_bg_alias
-    Text::Highlightable.add_to String
     hl = Text::ANSIHighlighter.instance 
     hl.add_alias :on_maroon, 1, 0, 2
     

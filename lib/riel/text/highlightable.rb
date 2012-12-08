@@ -67,6 +67,17 @@ module Text
       @@highlighter.on_rgb self, red, green, blue
     end
 
+    def grey value
+      @@highlighter.grey self, value
+    end
+
+    def on_grey value
+      @@highlighter.on_grey self, value
+    end
+
+    alias_method :gray, :grey
+    alias_method :on_gray, :on_grey
+
     def self.add_to cls
       cls.send :include, Text::Highlightable
     end

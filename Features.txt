@@ -36,3 +36,5 @@ Fri Dec  7 19:47:58 2012
 Sat Dec  8 10:13:31 2012
 
   Added on_rgb method for highlightable objects.
+
+  Added grey/gray and on_grey/on_gray.
