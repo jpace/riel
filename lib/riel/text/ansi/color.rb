@@ -54,7 +54,7 @@ module Text
     private
     def write fgbg
       print fgbg
-      print to_s
+      print to_str
       print reset
       print ' '
     end

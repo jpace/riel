@@ -1,26 +1,13 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'test/unit'
 require 'riel/text/ansi/ansi_palette'
-require 'stringio'
+require 'riel/text/ansi/palette_tc'
 
 module Text
-  class AnsiPaletteTest < Test::Unit::TestCase
-    def assert_ansi_print expected, meth
-      ap = AnsiPalette.instance
-      sio = StringIO.new
-      origstdout = $stdout
-      $stdout = sio
-      ap.send meth
-      sio.flush
-      $stdout = origstdout
-      str = sio.string
-      puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-      puts str
-      puts "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-      assert_equal expected.join(''), str
-      puts "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+  class AnsiPaletteTest < PaletteTest
+    def cls
+      AnsiPalette
     end
 
     def test_ansi_foregrounds
@@ -30,7 +17,7 @@ module Text
                   "\n",
                  ]
 
-      assert_ansi_print expected, :print_foregrounds
+      assert_print expected, :print_foregrounds
     end
 
     def test_ansi_backgrounds
@@ -40,7 +27,7 @@ module Text
                   "\n",
                  ]
 
-      assert_ansi_print expected, :print_backgrounds
+      assert_print expected, :print_backgrounds
     end
 
     def test_ansi_combinations
@@ -72,7 +59,7 @@ module Text
                   "\n",
                  ]
 
-      assert_ansi_print expected, :print_combinations
+      assert_print expected, :print_combinations
     end
   end
 end
