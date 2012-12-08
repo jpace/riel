@@ -64,6 +64,12 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     assert_equal "\x1b[38;5;67m123\e[0m", str
   end
 
+  def test_on_rgb
+    Text::Highlightable.add_to String
+    str = "123".on_rgb(1, 2, 3)
+    assert_equal "\x1b[48;5;67m123\e[0m", str
+  end
+
   def test_multiple
     Text::Highlightable.add_to String
     str = "ABC".bold.blue.on_green

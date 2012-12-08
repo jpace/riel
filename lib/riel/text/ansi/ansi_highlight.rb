@@ -55,6 +55,11 @@ module Text
       color.fg + str + color.reset
     end
 
+    def on_rgb str, red, green, blue
+      color = RGBColor.new red, green, blue
+      color.bg + str + color.reset
+    end
+
     def add_alias name, red, green, blue
       type = name.to_s[0 .. 2] == 'on_' ? :bg : :fg
       color = RGBColor.new red, green, blue, type

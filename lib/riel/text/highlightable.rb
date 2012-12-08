@@ -63,6 +63,10 @@ module Text
       @@highlighter.rgb self, red, green, blue
     end
 
+    def on_rgb red, green, blue
+      @@highlighter.on_rgb self, red, green, blue
+    end
+
     def self.add_to cls
       cls.send :include, Text::Highlightable
     end
