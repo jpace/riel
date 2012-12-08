@@ -4,7 +4,7 @@
 require 'riel/text/ansi/ansi_list'
 
 module Text
-  class ANSIAttributes < ANSIList
+  class Attributes < ANSIList
     def initialize 
       super Hash[
                  'none'       => '0', 

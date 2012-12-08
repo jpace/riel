@@ -4,9 +4,10 @@
 require 'riel/text/ansi/ansi_colors'
 
 module Text
-  class ANSIForegrounds < ANSIColors
+  class Backgrounds < Colors
     def initialize 
-      super COLORS, 30
+      on_colors = COLORS.collect { |color| "on_#{color}" }
+      super on_colors, 40
     end
   end
 end

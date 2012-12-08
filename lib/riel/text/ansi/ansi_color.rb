@@ -1,13 +1,15 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'riel/text/ansi/term_value'
+require 'riel/text/ansi/color'
 
 module Text
-  class TermGrey < TermValue
-  end
+  # An ANSI color uses only the basic 8 colors.
+  class AnsiColor < Color
+    def initialize value
+      super value, nil
+    end
 
-  class TermAnsi < TermValue
     def to_s
       "\e[#{value}m"
     end

@@ -34,3 +34,8 @@ This class processes strings, wrapping them in ANSI colors. For example:
 
 This class compares enumerables as sets, A fully including B, B fully including
 A, or A and B having common elements.
+
+### AnsiPalette
+
+This class prints the set of ANSI colors as foregrounds and backgrounds.
+

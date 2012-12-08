@@ -4,7 +4,7 @@
 require 'riel/text/ansi/ansi_list'
 
 module Text
-  class ANSIColors < ANSIList
+  class Colors < ANSIList
     COLORS = [ :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white ]
 
     def initialize colors, start

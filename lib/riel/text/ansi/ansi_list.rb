@@ -10,7 +10,7 @@ module Text
     def initialize colors
       @colors = Hash.new
       colors.each do |name, code|
-        @colors[name] = TermAnsi.new code
+        @colors[name] = AnsiColor.new code
       end
     end
   end

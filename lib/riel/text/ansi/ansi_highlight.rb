@@ -4,10 +4,10 @@
 require 'riel/text/highlight'
 require 'riel/text/ansi/ansi_color'
 require 'riel/text/ansi/ansi_colors'
-require 'riel/text/ansi/ansi_decorations'
-require 'riel/text/ansi/ansi_foregrounds'
-require 'riel/text/ansi/ansi_backgrounds'
-require 'riel/text/ansi/term_rgb_color'
+require 'riel/text/ansi/attributes'
+require 'riel/text/ansi/foregrounds'
+require 'riel/text/ansi/backgrounds'
+require 'riel/text/ansi/rgb_color'
 require 'singleton'
 
 module Text
@@ -34,7 +34,7 @@ module Text
                      ]
     
     ATTRIBUTES = Hash.new
-    [ ANSIAttributes, ANSIForegrounds, ANSIBackgrounds ].each { |cls| ATTRIBUTES.merge! cls.new.colors }
+    [ Attributes, Foregrounds, Backgrounds ].each { |cls| ATTRIBUTES.merge! cls.new.colors }
 
     def initialize 
       @aliases = Hash.new
@@ -51,13 +51,13 @@ module Text
     end
 
     def rgb str, red, green, blue
-      color = TermRGB.new red, green, blue
+      color = RGBColor.new red, green, blue
       color.fg + str + color.reset
     end
 
     def add_alias name, red, green, blue
       type = name.to_s[0 .. 2] == 'on_' ? :bg : :fg
-      color = TermRGB.new red, green, blue, type
+      color = RGBColor.new red, green, blue, type
       @aliases[name] = color
     end
 

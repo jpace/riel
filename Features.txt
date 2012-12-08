@@ -26,3 +26,7 @@ Wed Dec  5 20:00:28 2012
 Thu Dec  6 08:40:24 2012
 
   Added aliases for rgb. (AnsiHighlightTestCase#test_rgb_fg_alias)
+
+Fri Dec  7 19:47:58 2012
+
+  Added palette for ANSI colors.
