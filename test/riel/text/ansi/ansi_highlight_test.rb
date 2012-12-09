@@ -122,4 +122,22 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     # puts str
     assert_equal "\x1b[48;5;54mABC\e[0m", str
   end
+
+  def test_to_codes_one_color
+    hl = Text::ANSIHighlighter.instance 
+    code = hl.to_codes 'blue'
+    assert_equal "\e[34m", code
+  end
+
+  def test_to_codes_decoration_color
+    hl = Text::ANSIHighlighter.instance 
+    code = hl.to_codes 'bold blue'
+    assert_equal "\e[1m\e[34m", code
+  end
+
+  def test_to_codes_background_color
+    hl = Text::ANSIHighlighter.instance 
+    code = hl.to_codes 'on_blue'
+    assert_equal "\e[44m", code
+  end
 end

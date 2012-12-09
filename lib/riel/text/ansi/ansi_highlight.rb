@@ -40,6 +40,11 @@ module Text
     def initialize 
       @aliases = Hash.new
     end
+
+    def to_codes str
+      names = parse_colors str
+      names_to_code names
+    end
     
     def codes names
       names.collect { |name| ATTRIBUTES[name] }.compact

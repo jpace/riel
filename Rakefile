@@ -15,7 +15,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "riel"
-  s.version = "1.1.12"
+  s.version = "1.1.14"
   s.author = "Jeff Pace"
   s.email = "jeugenepace@gmail.com"
   s.homepage = "http://www.incava.org/projects/riel"
@@ -26,7 +26,7 @@ spec = Gem::Specification.new do |s|
   s.require_path = "lib"
   s.test_files = FileList["{test}/**/*test.rb"].to_a
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README"]
+  s.extra_rdoc_files = ["README.md"]
 end
  
 Gem::PackageTask.new(spec) do |pkg| 
