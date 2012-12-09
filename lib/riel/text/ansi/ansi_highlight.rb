@@ -39,8 +39,14 @@ module Text
 
     def initialize 
       @aliases = Hash.new
+      @default_codes = nil
     end
 
+    def default_codes limit = -1
+      @default_codes ||= Text::Highlighter::DEFAULT_COLORS.collect { |color| to_codes color }
+      @default_codes[0 .. limit]
+    end
+    
     def to_codes str
       names = parse_colors str
       names_to_code names
