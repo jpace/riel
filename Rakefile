@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'fileutils'
-require './lib/riel'
+# require './lib/riel'
 require 'rake/testtask'
 require 'rubygems/package_task'
 
@@ -15,7 +15,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "riel"
-  s.version = "1.1.14"
+  s.version = "1.1.15"
   s.author = "Jeff Pace"
   s.email = "jeugenepace@gmail.com"
   s.homepage = "http://www.incava.org/projects/riel"

@@ -39,3 +39,6 @@ A, or A and B having common elements.
 
 This class prints the set of ANSI colors as foregrounds and backgrounds.
 
+### ANSIITable
+
+This class prints a spreadsheet-like table of data.

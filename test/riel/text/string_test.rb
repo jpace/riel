@@ -12,8 +12,7 @@ class StringTestCase < Test::Unit::TestCase
   end
   
   def test_all_ansi
-    String.highlighter = "ANSI"
-
+    Text::Highlightable.add_to String
     str = "precision"
 
     run_test str, str.none,           0
