@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'riel/text/highlightable'
-
-# String is extended to support highlighting.
+# String can be extended to support highlighting.
 class String
-  # include Text::Highlightable
-  # extend Text::Highlightable
+  def self.highlight
+    require 'riel/text/highlightable'
+    Text::Highlightable.add_to String
+  end
 end

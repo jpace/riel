@@ -54,3 +54,5 @@ Tue Dec 11 18:07:19 2012
   module to String.
 
   Added test/example for ASCIITable.
+
+  Added String.highlight method, to add color methods to strings.

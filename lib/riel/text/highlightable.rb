@@ -21,7 +21,7 @@ module Text
         methdecl << "end"
         self.class.class_eval methdecl.join("\n")
         send meth, *args, &blk
-      elsif Text::ANSIHighlighter.instance.has_alias? meth
+      elsif ANSIHighlighter.instance.has_alias? meth
         methdecl = Array.new
         methdecl << "def #{meth}(&blk);"
         methdecl << "  @@highlighter.#{meth}(self, &blk);"
@@ -34,27 +34,27 @@ module Text
     end
 
     def respond_to? meth
-      has_color?(meth.to_s) || Text::ANSIHighlighter.instance.has_alias?(meth) || super
+      has_color?(meth.to_s) || ANSIHighlighter.instance.has_alias?(meth) || super
     end
 
     def has_color? color
-      Text::Highlighter::all_colors.include? color
+      Highlighter::all_colors.include? color
     end
 
     # Sets the highlighter for this class. This can be either by type or by
     # String.
     def highlighter= hl
       @@highlighter = case hl
-                      when Text::Highlighter
+                      when Highlighter
                         hl
                       when :none, "NONE", nil
-                        Text::NonHighlighter.new
+                        NonHighlighter.new
                       when :html, "HTML"
-                        Text::HTMLHighlighter.new
+                        HTMLHighlighter.new
                       when :ansi, "ANSI"
-                        Text::ANSIHighlighter.instance
+                        ANSIHighlighter.instance
                       else
-                        Text::NonHighlighter.new
+                        NonHighlighter.new
                       end
       
     end
@@ -79,7 +79,7 @@ module Text
     alias_method :on_gray, :on_grey
 
     def self.add_to cls
-      cls.send :include, Text::Highlightable
+      cls.send :include, Highlightable
     end
   end
 end
