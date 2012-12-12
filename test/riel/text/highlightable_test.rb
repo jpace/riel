@@ -2,6 +2,7 @@
 # -*- ruby -*-
 
 require 'test/unit'
+require 'riel/text/highlightable'
 require 'riel/text/ansi/ansi_highlight'
 require 'riel/text/string'
 

@@ -60,4 +60,3 @@ Tue Dec 11 18:07:19 2012
 Wed Dec 12 07:54:35 2012
 
   Added to_rgb_code, to get just the escape sequence for a color.
-
