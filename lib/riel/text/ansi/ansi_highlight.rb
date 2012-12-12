@@ -62,6 +62,11 @@ module Text
       names.collect { |name| ATTRIBUTES[name].to_s }.join ''
     end
 
+    def to_rgb_code red, green, blue, fgbg = :fg
+      color = RGBColor.new red, green, blue
+      color.send(fgbg)
+    end
+
     def to_rgb str, red, green, blue, meth
       color = RGBColor.new red, green, blue
       color.send(meth) + str + color.reset

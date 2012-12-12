@@ -140,4 +140,16 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     code = hl.to_codes 'on_blue'
     assert_equal "\e[44m", code
   end
+
+  def test_to_rgb_code
+    hl = Text::ANSIHighlighter.instance 
+    code = hl.to_rgb_code 1, 3, 5
+    assert_equal "\e[38;5;75m", code
+  end
+
+  def test_to_rgb_code_bg
+    hl = Text::ANSIHighlighter.instance 
+    code = hl.to_rgb_code 1, 3, 5, :bg
+    assert_equal "\e[48;5;75m", code
+  end
 end
