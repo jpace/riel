@@ -25,10 +25,12 @@ arguments.
 
 ### ANSIHighlighter
 
-This class processes strings, wrapping them in ANSI colors. For example:
+This class wraps strings in ANSI colors. For example:
 
     "foo".blue
     "bar".bold.blue.on_white
+
+It also handles RGB values (on a 0-5 scale, not 0-255):
 
 ### SetDiff
 

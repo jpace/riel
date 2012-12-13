@@ -2,7 +2,6 @@
 # -*- ruby -*-
 
 require 'rubygems'
-require 'riel'
 require 'test/unit'
 require 'riel/asciitable/table'
 require 'stringio'

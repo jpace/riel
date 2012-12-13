@@ -12,10 +12,6 @@ class HighlightableTestCase < Test::Unit::TestCase
     assert_equal "\e[34mfoo\e[0m", "foo".blue
   end
 
-  class String
-    include Text::Highlightable
-  end
-
   def test_string_include
     assert_equal "\e[34mfoo\e[0m", "foo".blue
   end

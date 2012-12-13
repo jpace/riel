@@ -2,6 +2,7 @@
 # -*- ruby -*-
 
 require 'test/unit'
+require 'riel/text/highlightable'
 require 'riel/text/ansi/ansi_highlight'
 require 'riel/text/string'
 
@@ -62,16 +63,6 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     assert_equal "...\e[34m\e[42mthis\e[0m... is blue", hl.gsub("...this... is blue", %r{this}, "blue on green")
   end
 
-  def test_rgb
-    str = "123".rgb(1, 2, 3)
-    assert_equal "\x1b[38;5;67m123\e[0m", str
-  end
-
-  def test_on_rgb
-    str = "123".on_rgb(1, 2, 3)
-    assert_equal "\x1b[48;5;67m123\e[0m", str
-  end
-
   def test_grey
     str = "123".grey(14)
     assert_equal "\x1b[38;5;246m123\e[0m", str
@@ -105,51 +96,21 @@ class AnsiHighlightTestCase < Test::Unit::TestCase
     assert_equal "\e[34mABC\e[0m\e[31m123\e[0m", str + int
   end
 
-  def test_rgb_fg_alias
+  def assert_to_codes expected, rgbstr
     hl = Text::ANSIHighlighter.instance 
-    hl.add_alias :teal, 1, 4, 4
-    
-    str = "ABC".teal
-    # puts str
-    assert_equal "\x1b[38;5;80mABC\e[0m", str
-  end
-
-  def test_rgb_bg_alias
-    hl = Text::ANSIHighlighter.instance 
-    hl.add_alias :on_maroon, 1, 0, 2
-    
-    str = "ABC".on_maroon
-    # puts str
-    assert_equal "\x1b[48;5;54mABC\e[0m", str
+    codes = hl.to_codes rgbstr
+    assert_equal expected, codes
   end
 
   def test_to_codes_one_color
-    hl = Text::ANSIHighlighter.instance 
-    code = hl.to_codes 'blue'
-    assert_equal "\e[34m", code
+    assert_to_codes "\e[34m", 'blue'
   end
 
   def test_to_codes_decoration_color
-    hl = Text::ANSIHighlighter.instance 
-    code = hl.to_codes 'bold blue'
-    assert_equal "\e[1m\e[34m", code
+    assert_to_codes "\e[1m\e[34m", 'bold blue'
   end
 
   def test_to_codes_background_color
-    hl = Text::ANSIHighlighter.instance 
-    code = hl.to_codes 'on_blue'
-    assert_equal "\e[44m", code
-  end
-
-  def test_to_rgb_code
-    hl = Text::ANSIHighlighter.instance 
-    code = hl.to_rgb_code 1, 3, 5
-    assert_equal "\e[38;5;75m", code
-  end
-
-  def test_to_rgb_code_bg
-    hl = Text::ANSIHighlighter.instance 
-    code = hl.to_rgb_code 1, 3, 5, :bg
-    assert_equal "\e[48;5;75m", code
+    assert_to_codes "\e[44m", 'on_blue'
   end
 end
