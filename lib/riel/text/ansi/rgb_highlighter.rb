@@ -22,7 +22,7 @@ module Text
 
     def to_rgb_code red, green, blue, fgbg = :fg
       color = RGBColor.new red, green, blue
-      color.send(fgbg)
+      color.send fgbg
     end
 
     def to_rgb str, red, green, blue, meth
@@ -53,7 +53,7 @@ module Text
     end
 
     def respond_to? meth
-      has_alias? meth
+      has_alias?(meth) || super
     end
 
     def method_missing(meth, *args, &blk)

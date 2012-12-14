@@ -39,6 +39,16 @@ Colors and attributes can be chained:
 
     "hey!".rgb(0, 3, 5).on_rgb(5, 2, 1).bold.underline
  
+Aliases (names) for colors can be defined:
+
+    Text::ANSIHighlighter.instance.add_alias :teal, 1, 4, 4
+    puts "hello, word".teal
+ 
+Background aliases are supported:
+
+    Text::ANSIHighlighter.instance.add_alias :on_slate, 0, 1, 1
+    puts "hello, word".teal
+ 
 ### SetDiff
 
 This class compares enumerables as sets, A fully including B, B fully including
