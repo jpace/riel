@@ -5,9 +5,9 @@ require 'riel/text/ansi/ansi_palette'
 require 'riel/text/ansi/palette_tc'
 
 module Text
-  class AnsiPaletteTest < PaletteTest
+  class ANSIPaletteTest < PaletteTest
     def cls
-      AnsiPalette
+      ANSIPalette
     end
 
     def test_ansi_foregrounds

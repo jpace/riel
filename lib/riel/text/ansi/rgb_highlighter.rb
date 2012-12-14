@@ -5,7 +5,7 @@ require 'riel/text/ansi/rgb_color'
 require 'singleton'
 
 module Text
-  # Highlights using ANSI escape sequences.
+  # Highlights using extended (RGB) ANSI escape sequences.
   module RGBHighlighter
     RGB_RE = Regexp.new '(on_?)?(\d)(\d)(\d)'
 

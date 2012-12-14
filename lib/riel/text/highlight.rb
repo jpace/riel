@@ -22,7 +22,7 @@ module Text
 
     BACKGROUND_COLORS = COLORS.collect { |color| "on_#{color}" }
     FOREGROUND_COLORS = COLORS
-
+    
     COLORS_RE = Regexp.new('(?: ' + 
                                 # background will be in capture 0
                                 'on(?:\s+|_) ( ' + COLORS.join(' | ') + ' ) | ' +

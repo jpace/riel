@@ -21,7 +21,7 @@ module Text
         methdecl << "end"
         self.class.class_eval methdecl.join("\n")
         send meth, *args, &blk
-      elsif ANSIHighlighter.instance.has_alias? meth
+      elsif @@highlighter.has_alias? meth
         methdecl = Array.new
         methdecl << "def #{meth}(&blk);"
         methdecl << "  @@highlighter.#{meth}(self, &blk);"

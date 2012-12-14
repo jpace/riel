@@ -22,6 +22,18 @@ class RGBHighlighterTest < Test::Unit::TestCase
     assert_equal "\x1b[48;5;67m123\e[0m", str
   end
 
+  def test_rgb_chained
+    str = "gaudy".rgb(4, 1, 2).on_rgb(1, 5, 3)
+    puts "str: #{str}"
+    assert_equal "\x1b[48;5;85m\x1b[38;5;168mgaudy\e[0m\e[0m", str
+  end
+
+  def test_rgb_bold_underline
+    str = "hey!".rgb(0, 3, 5).on_rgb(5, 2, 1).bold.underline
+    puts "str: #{str}"
+    assert_equal "\e[4m\e[1m\e[48;5;209m\x1b[38;5;39mhey!\e[0m\e[0m\e[0m\e[0m", str
+  end
+
   def assert_to_codes expected, rgbstr
     codes = @hl.to_codes rgbstr
     assert_equal expected, codes
@@ -75,5 +87,13 @@ class RGBHighlighterTest < Test::Unit::TestCase
     str = "mauve chalk on dahlia".mauve_chalk.on_dahlia_mauve
     puts str
     assert_equal "\x1b[48;5;133m\x1b[38;5;224mmauve chalk on dahlia\e[0m\e[0m", str
+  end
+
+  def test_rrggbb
+    rr, gg, bb = @hl.rrggbb(122, 212, 67)
+    puts "rr, gg, bb: #{rr}, #{gg}, #{bb}"
+
+    rr, gg, bb = @hl.rrggbb(121, 211, 62)
+    puts "rr, gg, bb: #{rr}, #{gg}, #{bb}"
   end
 end

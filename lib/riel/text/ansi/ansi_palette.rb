@@ -6,7 +6,7 @@ require 'riel/text/ansi/palette'
 require 'singleton'
 
 module Text
-  class AnsiPalette < Palette
+  class ANSIPalette < Palette
     include Singleton
 
     ANSI_RG = (0 .. 7)

@@ -32,14 +32,26 @@ This class wraps strings in ANSI colors. For example:
 
 It also handles RGB values (on a 0-5 scale, not 0-255):
 
+    "foo".rgb(3, 1, 5)
+    "bar".on_rgb(1, 0, 4)
+
+Colors and attributes can be chained:
+
+    "hey!".rgb(0, 3, 5).on_rgb(5, 2, 1).bold.underline
+ 
 ### SetDiff
 
 This class compares enumerables as sets, A fully including B, B fully including
 A, or A and B having common elements.
 
-### AnsiPalette
+### ANSIPalette
 
 This class prints the set of ANSI colors as foregrounds and backgrounds.
+
+### RGBPalette
+
+This class prints the set of RGB (extended ANSI) colors as foregrounds,
+backgrounds and combinations.
 
 ### ANSIITable
 
