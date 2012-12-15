@@ -64,3 +64,7 @@ Wed Dec 12 07:54:35 2012
 Thu Dec 13 17:47:22 2012
 
   Added String.color examples.
+
+Sat Dec 15 11:09:57 2012
+
+  Fixed matching of -Xy as the same as -X -y.

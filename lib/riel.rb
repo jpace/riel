@@ -4,5 +4,5 @@ $:.unshift(riellibdir) unless
   $:.include?(riellibdir) || $:.include?(File.expand_path(riellibdir))
 
 module RIEL
-  VERSION = '1.1.15'
+  VERSION = '1.1.16'
 end

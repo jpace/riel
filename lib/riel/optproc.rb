@@ -231,10 +231,10 @@ module OptProc
     end
 
     COMBINED_OPTS_RES = [
-      #               -number     non-num, then anything
-      Regexp.new('^ ( - \d+   )  ( \D+.* ) $ ', Regexp::EXTENDED),
-      #               -letter     anything
-      Regexp.new('^ ( - [a-z] )  ( .+    ) $ ', Regexp::EXTENDED)
+      #               -number       non-num
+      Regexp.new('^ ( - \d+   )     ( \D+.* ) $ ', Regexp::EXTENDED),
+      #               -letter       anything
+      Regexp.new('^ ( - [a-zA-Z] )  ( .+    ) $ ', Regexp::EXTENDED)
     ]
 
     def process_option args
