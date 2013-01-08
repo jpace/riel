@@ -77,36 +77,17 @@ module RIEL
 
     def self.add_color_method color, code
       instmeth = Array.new
-      instmeth << "def #{color} msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk"
+      instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk"
       instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
       instmeth << "end"
       instance_eval instmeth.join("\n")
 
       clsmeth = Array.new
-      clsmeth << "def #{color} msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk"
+      clsmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk"
       clsmeth << "  logger.#{color}(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
       clsmeth << "end"
 
       class_eval clsmeth.join("\n")
-    end
-
-    if false
-      ANSIColor::ATTRIBUTES.sort.each do |attr|
-        methname = attr[0]
-
-        instmeth = Array.new
-        instmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-        instmeth << "  log(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-        instmeth << "end"
-        instance_eval instmeth.join("\n")
-
-        clsmeth = Array.new
-        clsmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-        clsmeth << "  logger.#{methname}(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-        clsmeth << "end"
-
-        class_eval clsmeth.join("\n")
-      end
     end
 
     def self.set_default_widths

@@ -3,7 +3,6 @@
 
 require 'riel/env'
 require 'riel/log'
-require 'riel/text'
 require 'riel/enumerable'
 
 module OptProc

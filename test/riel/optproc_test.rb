@@ -12,35 +12,6 @@ class OptProcTestCase < Test::Unit::TestCase
     ENV['HOME'] = '/this/should/not/exist'
   end
 
-  def run_test args, exp, &blk
-    expected = DEFAULTS.merge(exp)
-
-    # ignore what they have in ENV[HOME]    
-    ENV['HOME'] = '/this/should/not/exist'
-
-    origargs = args.dup
-    
-    gopt = GlarkOptions.instance
-    gopt.run args
-    
-    expected.sort { |a, b| a[0].to_s <=> b[0].to_s }.each do |opt, exval|
-      meth = gopt.method(opt)
-      val  = meth.call
-      if val.kind_of? Array
-        assert_equal exval.length, val.length, "#{opt} => #{exval.class}.length #{exval.inspect}; #{val.class}.length #{val.inspect}; #{origargs.inspect}"
-        (0 ... exval.length).each do |idx|
-          assert_equal exval[idx], val[idx], "#{opt}[#{idx}] => #{exval.class}.length #{exval.inspect}; #{val.class}.length #{val.inspect}; #{origargs.inspect}"
-        end
-      else
-        assert_equal exval, val, "#{opt} => #{exval.class} #{exval.inspect}; #{val.class} #{val.inspect}; #{origargs.inspect}"
-      end
-    end
-    
-    blk.call(gopt) if blk
-
-    gopt.reset
-  end
-
   def run_match_tag_test opt, exp, tag
     m = opt.match [ tag ]
     match = nil
@@ -80,7 +51,7 @@ class OptProcTestCase < Test::Unit::TestCase
     end
   end
 
-  def run_match_value_test(opt, exp, val)
+  def run_match_value_test opt, exp, val
     m = opt.match_value val
     assert !!m == !!exp, "match value #{val}; expected: #{exp.inspect}; actual: #{m.inspect}"
   end

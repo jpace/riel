@@ -68,3 +68,7 @@ Thu Dec 13 17:47:22 2012
 Sat Dec 15 11:09:57 2012
 
   Fixed matching of -Xy as the same as -X -y.
+
+Mon Jan  7 20:09:41 2013
+
+  log: fixed usage of color names as debug methods.

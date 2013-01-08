@@ -122,6 +122,15 @@ class LogTestCase < Test::Unit::TestCase
     Log.set_default_widths
   end
 
+  def test_color
+    log = Proc.new { 
+      Log.blue "format"
+    }
+    
+    Log.set_default_widths
+    # run_test(@verbose_setup, log, "[ ...test/riel/log_test.rb: 127] {test_color          } \e[34mformat\e[0m")
+  end
+
   def run_format_test log, file_width, line_width, func_width, expected
     Log.set_widths file_width, line_width, func_width
     run_test @verbose_setup, log, expected

@@ -88,8 +88,8 @@ module RIEL
     # lines with zeros (e.g., "00317") the line_width argument must be a string,
     # not an integer.
     def set_widths file_width, line_width, func_width
-      @file_width     = file_width
-      @line_width     = line_width
+      @file_width = file_width
+      @line_width = line_width
       @function_width = func_width
       
       @format = "[%#{file_width}s:%#{line_width}d] {%#{func_width}s}"
