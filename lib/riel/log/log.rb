@@ -9,9 +9,10 @@
 # Documentation:: Author
 #
 
-require 'riel/ansicolor'
 require 'riel/log/logger'
 require 'riel/log/severity'
+require 'rubygems'
+require 'rainbow'
 
 #
 # == Log
@@ -67,12 +68,19 @@ module RIEL
     end
 
     def self.method_missing meth, *args, &blk
-      if code = ANSIColor::ATTRIBUTES[meth.to_s]
-        add_color_method meth.to_s, code
+      validcolors = Sickill::Rainbow::TERM_COLORS
+      # only handling foregrounds, not backgrounds
+      if code = validcolors[meth]
+        add_color_method meth.to_s, code + 30
         send meth, *args, &blk
       else
         super
       end
+    end
+
+    def self.respond_to? meth
+      validcolors = Sickill::Rainbow::TERM_COLORS
+      validcolors.include?(meth) || super
     end
 
     def self.add_color_method color, code

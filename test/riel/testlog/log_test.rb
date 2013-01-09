@@ -22,7 +22,7 @@ class LogTestCase < Test::Unit::TestCase
       Log.stack "hello, world?"
     }
     
-    run_test(@nonverbose_setup, log)
+    run_test @nonverbose_setup, log
   end
 
   def test_output_arg
@@ -35,19 +35,17 @@ class LogTestCase < Test::Unit::TestCase
       Log.stack "hello, world?"
     }
 
-    expected_output = [
-      "[ ...test/riel/log_test.rb:  30] {test_output_arg     } hello, world?",
-      "[ ...test/riel/log_test.rb:  31] {test_output_arg     } hello, world?",
-      "[ ...test/riel/log_test.rb:  32] {test_output_arg     } hello, world?",
-      "[ ...test/riel/log_test.rb:  33] {test_output_arg     } hello, world?",
-      "[ ...test/riel/log_test.rb:  34] {test_output_arg     } hello, world?",
-      "[ ...test/riel/log_test.rb:  35] {test_output_arg     } hello, world?",
-      "[ ...test/riel/log_test.rb: 163] {call                } ",
-      "[ ...test/riel/log_test.rb: 163] {run_test            } ",
-      "[ ...test/riel/log_test.rb:  68] {test_output_arg     } ",
-    ]
+    methname = if RUBY_VERSION == "1.8.7" then "test_output_arg" else "block in test_output_arg" end
 
-    # run_test @verbose_setup, log, *expected_output
+    expected = Array.new
+    (0 .. 5).each do |lnum|
+      expected << sprintf("[   ...testlog/log_test.rb:  %2d] {%-20s} hello, world?", 30 + lnum, methname[0 .. 19])
+    end
+    expected << "[   ...testlog/log_test.rb: 179] {call                } "
+    expected << "[   ...testlog/log_test.rb: 179] {run_test            } "
+    expected << "[   ...testlog/log_test.rb:  48] {test_output_arg     } "
+    
+    run_test @verbose_setup, log, *expected
   end
 
   def test_output_block
@@ -128,7 +126,9 @@ class LogTestCase < Test::Unit::TestCase
     }
     
     Log.set_default_widths
-    # run_test(@verbose_setup, log, "[ ...test/riel/log_test.rb: 127] {test_color          } \e[34mformat\e[0m")
+    expmeth = if RUBY_VERSION == "1.8.7" then "test_color" else "block in test_color" end
+    expmsg = sprintf "[   ...testlog/log_test.rb: 125] {%-20s} \e[34mformat\e[0m", expmeth
+    exec_test @verbose_setup, log, [ expmsg ]
   end
 
   def run_format_test log, file_width, line_width, func_width, expected
@@ -149,6 +149,28 @@ class LogTestCase < Test::Unit::TestCase
     }
 
     super test
+  end
+
+  def exec_test setup, log, expected = Array.new
+    io = setup.call
+
+    log.call
+
+    assert_not_nil io
+    str = io.string
+    assert_not_nil str
+
+    lines = str.split "\n"
+
+    unless expected.empty?
+      (0 ... expected.size).each do |idx|
+        if expected[idx]
+          assert_equal expected[idx], lines[idx], "index: #{idx}"
+        end
+      end
+    end
+
+    Log.output = io
   end
 
   def run_test setup, log, *expected

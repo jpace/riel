@@ -29,9 +29,9 @@ class RGBHighlighterTest < Test::Unit::TestCase
   end
 
   def test_rgb_bold_underline
-    str = "hey!".rgb(0, 3, 5).on_rgb(5, 2, 1).bold.underline
+    str = "hey!".rgb(0, 3, 5).on_rgb(5, 2, 1).bright.underline
     puts "str: #{str}"
-    assert_equal "\e[4m\e[1m\e[48;5;209m\x1b[38;5;39mhey!\e[0m\e[0m\e[0m\e[0m", str
+    assert_equal "\e[48;5;209m\x1b[38;5;39m\e[1m\e[4mhey!\e[0m\e[0m", str
   end
 
   def assert_to_codes expected, rgbstr

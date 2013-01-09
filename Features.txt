@@ -72,3 +72,7 @@ Sat Dec 15 11:09:57 2012
 Mon Jan  7 20:09:41 2013
 
   log: fixed usage of color names as debug methods.
+
+Tue Jan  8 20:11:28 2013
+
+  Continued migrating toward use of Rainbow for string highlighting.
