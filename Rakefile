@@ -26,9 +26,9 @@ spec = Gem::Specification.new do |s|
   s.require_path = "lib"
   s.test_files = FileList["{test}/**/*test.rb"].to_a
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README.md"]
+  s.extra_rdoc_files = [ "README.md" ]
 
-  s.add_dependency("rainbow", ">= 1.1.4")
+  s.add_dependency "rainbow", ">= 1.1.4"
 end
  
 Gem::PackageTask.new(spec) do |pkg| 

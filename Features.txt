@@ -76,3 +76,4 @@ Mon Jan  7 20:09:41 2013
 Tue Jan  8 20:11:28 2013
 
   Continued migrating toward use of Rainbow for string highlighting.
+  log: added test case for Loggable.
