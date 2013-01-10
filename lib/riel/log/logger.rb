@@ -71,7 +71,7 @@ module RIEL
     end
 
     def set_default_widths
-      set_widths(-25, 4, -20)
+      set_widths Log::DEFAULT_FILENAME_WIDTH, Log::DEFAULT_LINENUM_WIDTH, Log::DEFAULT_FUNCTION_WIDTH
     end
 
     def verbose

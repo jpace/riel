@@ -54,6 +54,10 @@ require 'rainbow'
 module RIEL
   class Log
     $LOGGING_LEVEL = nil
+
+    DEFAULT_FILENAME_WIDTH = -25
+    DEFAULT_LINENUM_WIDTH = 4
+    DEFAULT_FUNCTION_WIDTH = -20
     
     include Log::Severity
 

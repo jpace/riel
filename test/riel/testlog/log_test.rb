@@ -5,6 +5,7 @@ require 'pathname'
 require 'test/unit'
 require 'stringio'
 require 'riel/log'
+require 'riel/testlog/logtestee'
 
 class LogTestCase < Test::Unit::TestCase
   include Loggable
@@ -38,12 +39,12 @@ class LogTestCase < Test::Unit::TestCase
     methname = if RUBY_VERSION == "1.8.7" then "test_output_arg" else "block in test_output_arg" end
 
     expected = Array.new
-    (0 .. 5).each do |lnum|
+    (1 .. 6).each do |lnum|
       expected << sprintf("[   ...testlog/log_test.rb:  %2d] {%-20s} hello, world?", 30 + lnum, methname[0 .. 19])
     end
-    expected << "[   ...testlog/log_test.rb: 179] {call                } "
-    expected << "[   ...testlog/log_test.rb: 179] {run_test            } "
-    expected << "[   ...testlog/log_test.rb:  48] {test_output_arg     } "
+    expected << "[   ...testlog/log_test.rb: 234] {call                } "
+    expected << "[   ...testlog/log_test.rb: 234] {run_test            } "
+    expected << "[   ...testlog/log_test.rb:  49] {test_output_arg     } "
     
     run_test @verbose_setup, log, *expected
   end
@@ -100,41 +101,95 @@ class LogTestCase < Test::Unit::TestCase
     Log.set_default_widths
   end
 
-  def test_format
-    log = Proc.new { 
-      Log.log "format"
-    }
-    
+  def run_format_test(expected, &blk)
+    Log.verbose = true
+    io = StringIO.new
+    Log.output = io
     Log.set_default_widths
-    # run_test(@verbose_setup, log, "[ ...test/riel/log_test.rb: 122] {test_format         } format")
 
-    # Log.set_widths(file_width, line_width, func_width)
-    
-    #run_format_test(log, -25,    8, 30, "[ ...test/riel/log_test.rb:     122] {                   test_format} format")
-    #run_format_test(log,  25,    8, 30, "[ ...test/riel/log_test.rb:     122] {                   test_format} format")
-    #run_format_test(log,  25, "08", 30, "[ ...test/riel/log_test.rb:00000122] {                   test_format} format")
-    
-    # useless feature of truncating line numbers, but so it goes ...
-    # run_format_test(log,   4,   2, -10, "[ ...:12] {test_forma} format")
+    blk.call
+
+    lt = LogTestee.new
+    lt.format_test
+
+    puts io.string
+
+    assert_equal expected.join(''), io.string
     
     Log.set_default_widths
+  end
+
+  def test_format_default
+    puts "test_format_default"
+
+    expected = Array.new
+    expected << "[  ...testlog/logtestee.rb:  10] {format_test         } tamrof\n"
+
+    run_format_test expected do
+      Log.set_default_widths
+    end
+  end
+
+  def xxtest_format_flush_filename_left
+    puts "test_format_flush_filename_left"
+    
+    expected = Array.new
+    expected << "[./test/riel/testlog/logtestee.rb   :  10] {format_test         } tamrof\n"
+
+    run_format_test expected do
+      Log.set_widths(-35, Log::DEFAULT_LINENUM_WIDTH, Log::DEFAULT_FUNCTION_WIDTH)
+    end
+  end
+
+  def test_format_flush_linenum_left
+    puts "test_format_flush_linenum_left"
+
+    expected = Array.new
+    expected << "[  ...testlog/logtestee.rb:10        ] {format_test         } tamrof\n"
+
+    run_format_test expected do
+      Log.set_widths(Log::DEFAULT_FILENAME_WIDTH, -10, Log::DEFAULT_FUNCTION_WIDTH)
+    end
+  end
+
+  def test_format_flush_function_right
+    puts "test_format_flush_function_right"
+
+    expected = Array.new
+    expected << "[  ...testlog/logtestee.rb:  10] {                        format_test} tamrof\n"
+
+    run_format_test expected do
+      Log.set_widths(Log::DEFAULT_FILENAME_WIDTH, Log::DEFAULT_LINENUM_WIDTH, 35)
+    end
+  end
+
+  def test_format_pad_linenum_zeros
+    puts "test_format_pad_linenum_zeros"
+    
+    expected = Array.new
+    expected << "[  ...testlog/logtestee.rb:00000010] {format_test         } tamrof\n"
+
+    run_format_test expected do
+      Log.set_widths(Log::DEFAULT_FILENAME_WIDTH, "08", Log::DEFAULT_FUNCTION_WIDTH)
+    end
   end
 
   def test_color
-    log = Proc.new { 
-      Log.blue "format"
-    }
-    
+    Log.verbose = true
+    io = StringIO.new
+    Log.output = io
     Log.set_default_widths
-    expmeth = if RUBY_VERSION == "1.8.7" then "test_color" else "block in test_color" end
-    expmsg = sprintf "[   ...testlog/log_test.rb: 125] {%-20s} \e[34mformat\e[0m", expmeth
-    exec_test @verbose_setup, log, [ expmsg ]
-  end
+    
+    expected = Array.new
+    expected << "[  ...testlog/logtestee.rb:   6] {color_test          } [34mazul[0m\n"
+    
+    lt = LogTestee.new
+    lt.color_test
 
-  def run_format_test log, file_width, line_width, func_width, expected
-    Log.set_widths file_width, line_width, func_width
-    run_test @verbose_setup, log, expected
-  end    
+    puts io.string
+
+    assert_equal expected.join(''), io.string
+  end
 
   # the ctor is down here so the lines above are less likely to change.
   def initialize test, name = nil
