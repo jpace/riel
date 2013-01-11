@@ -174,6 +174,11 @@ module RIEL
       file, line, func = md[1], md[2], (md[3] || "")
       # file.sub!(/.*\//, "")
 
+      # Ruby 1.9 expands the file name, but 1.8 doesn't:
+      pn = Pathname.new(file).expand_path
+      
+      file = pn.to_s
+
       if cname
         func = cname + "#" + func
       end
@@ -217,6 +222,10 @@ module RIEL
     end
 
     def print_formatted file, line, func, msg, lvl, &blk
+      # puts "file: #{file}".color(:cyan)
+      # puts "line: #{line}".color(:cyan)
+      # puts "func: #{func}".color(:cyan)
+
       if trim
         file = trim_right file, @file_width
         line = trim_left  line, @line_width
@@ -224,6 +233,7 @@ module RIEL
       end
 
       hdr = sprintf @format, file, line, func
+      # puts "hdr: #{hdr}".color(:yellow)
       print hdr, msg, lvl, &blk
     end
     

@@ -130,11 +130,11 @@ class LogTestCase < Test::Unit::TestCase
     end
   end
 
-  def xxtest_format_flush_filename_left
+  def test_format_flush_filename_left
     puts "test_format_flush_filename_left"
     
     expected = Array.new
-    expected << "[./test/riel/testlog/logtestee.rb   :  10] {format_test         } tamrof\n"
+    expected << "[  ...test/riel/testlog/logtestee.rb:  10] {format_test         } tamrof\n"
 
     run_format_test expected do
       Log.set_widths(-35, Log::DEFAULT_LINENUM_WIDTH, Log::DEFAULT_FUNCTION_WIDTH)

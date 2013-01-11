@@ -81,3 +81,7 @@ Tue Jan  8 20:11:28 2013
 Wed Jan  9 20:22:21 2013
 
   log: expanded tests.
+
+Thu Jan 10 20:22:31 2013
+
+  log: fixed for changes between 1.8 and 1.9.
