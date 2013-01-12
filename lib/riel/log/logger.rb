@@ -190,50 +190,15 @@ module RIEL
       end
     end
 
-    def trim_left str, maxlen
-      str[0 ... maxlen.to_i.abs]
-    end
-
-    def trim_right str, maxlen
-      mxln = maxlen.abs
-
-      # magic number 3 for the ellipses ...
-
-      if str.length > mxln
-        path = str.split('/')
-        newstr = "..."
-        path.reverse.each do |element|
-          if newstr.length + element.length > mxln
-            while newstr.length < mxln
-              newstr.insert 0, " "
-            end
-            return newstr
-          else
-            if newstr.length > 3
-              newstr.insert 3, "/"
-            end
-            newstr.insert 3, element
-          end
-        end
-        newstr
-      else
-        str
-      end
-    end
-
     def print_formatted file, line, func, msg, lvl, &blk
-      # puts "file: #{file}".color(:cyan)
-      # puts "line: #{line}".color(:cyan)
-      # puts "func: #{func}".color(:cyan)
-
       if trim
-        file = trim_right file, @file_width
-        line = trim_left  line, @line_width
-        func = trim_left  func, @function_width
+        fmt = Format.new
+        file = fmt.trim_right file, @file_width
+        line = fmt.trim_left  line, @line_width
+        func = fmt.trim_left  func, @function_width
       end
 
       hdr = sprintf @format, file, line, func
-      # puts "hdr: #{hdr}".color(:yellow)
       print hdr, msg, lvl, &blk
     end
     
@@ -247,19 +212,22 @@ module RIEL
         end
       end
 
-      if @colors[lvl]
+      msg = msg.to_s.chomp
+
+      if lvlcol = @colors[lvl]
         if colorize_line
-          @output.puts @colors[lvl] + hdr + " " + msg.to_s.chomp + ANSIColor.reset
+          line = hdr + " " + msg
+          @output.puts line.color(lvlcol)
         else
-          @output.puts hdr + " " + @colors[lvl] + msg.to_s.chomp + ANSIColor.reset
+          @output.puts hdr + " " + msg.color(lvlcol)
         end
       else
-        @output.puts hdr + " " + msg.to_s.chomp
+        @output.puts hdr + " " + msg
       end      
     end
 
     def set_color lvl, color
-      @colors[lvl] = ANSIColor::code color
+      @colors[lvl] = color
     end
 
     def self.method_missing(meth, *args, &blk)
@@ -284,25 +252,6 @@ module RIEL
       clsmeth << "end"
 
       class_eval clsmeth.join("\n")
-    end
-
-    if false
-      ANSIColor::ATTRIBUTES.sort.each do |attr|
-        methname = attr[0]
-
-        instmeth = Array.new
-        instmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-        instmeth << "  log(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-        instmeth << "end"
-        instance_eval instmeth.join("\n")
-
-        clsmeth = Array.new
-        clsmeth << "def #{methname}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-        clsmeth << "  logger.#{methname}(\"\\e[#{attr[1]}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-        clsmeth << "end"
-
-        class_eval clsmeth.join("\n")
-      end
     end
   end
 end

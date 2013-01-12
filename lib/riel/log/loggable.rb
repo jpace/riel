@@ -88,16 +88,5 @@ module RIEL
       meth << "end"
       self.class.module_eval meth.join("\n")
     end
-
-    if false
-      ANSIColor::ATTRIBUTES.sort.each do |attr|
-        methname = attr[0]
-        meth = Array.new
-        meth << "def #{methname} msg = \"\", lvl = Log::DEBUG, depth = 1, &blk"
-        meth << "  Log.#{methname} msg, lvl, depth + 1, self.class.to_s, &blk"
-        meth << "end"
-        module_eval meth.join("\n")
-      end
-    end
   end
 end
