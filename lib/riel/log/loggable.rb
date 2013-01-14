@@ -10,6 +10,8 @@
 #
 
 require 'riel/log/log'
+require 'rubygems'
+require 'rainbow'
 
 #
 # == Loggable
@@ -73,17 +75,24 @@ module RIEL
     end
 
     def method_missing meth, *args, &blk
-      if ANSIColor::ATTRIBUTES[meth.to_s]
-        add_color_method meth.to_s
+      validcolors = Sickill::Rainbow::TERM_COLORS
+      # only handling foregrounds, not backgrounds
+      if code = validcolors[meth]
+        add_color_method meth.to_s, code + 30
         send meth, *args, &blk
       else
         super
       end
     end
 
-    def add_color_method color
+    def respond_to? meth
+      validcolors = Sickill::Rainbow::TERM_COLORS
+      validcolors.include?(meth) || super
+    end
+
+    def add_color_method color, code
       meth = Array.new
-      meth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, &blk"
+      meth << "def #{color}(msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk)"
       meth << "  Log.#{color} msg, lvl, depth + 1, self.class.to_s, &blk"
       meth << "end"
       self.class.module_eval meth.join("\n")

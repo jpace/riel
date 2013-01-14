@@ -9,8 +9,10 @@
 # Documentation:: Author
 #
 
-require 'riel/ansicolor'
+require 'rubygems'
+require 'rainbow'
 require 'riel/log/severity'
+require 'riel/log/format'
 
 #
 # == Logger
@@ -230,16 +232,23 @@ module RIEL
       @colors[lvl] = color
     end
 
-    def self.method_missing(meth, *args, &blk)
-      if code = ANSIColor::ATTRIBUTES[meth.to_s]
-        add_color_method meth.to_s, code
+    def method_missing meth, *args, &blk
+      validcolors = Sickill::Rainbow::TERM_COLORS
+      # only handling foregrounds, not backgrounds
+      if code = validcolors[meth]
+        add_color_method meth.to_s, code + 30
         send meth, *args, &blk
       else
         super
       end
     end
 
-    def self.add_color_method color, code
+    def respond_to? meth
+      validcolors = Sickill::Rainbow::TERM_COLORS
+      validcolors.include?(meth) || super
+    end
+
+    def add_color_method color, code
       instmeth = Array.new
       instmeth << "def #{color}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
       instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"

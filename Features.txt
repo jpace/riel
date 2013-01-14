@@ -94,3 +94,7 @@ Sat Jan 12 17:09:34 2013
 
   log: reduced number of methods.
   log: migrated toward using the Rainbow gem.
+
+Sun Jan 13 19:05:06 2013
+
+  log: fully changed dependency to Rainbow.

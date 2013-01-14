@@ -247,4 +247,8 @@ class LogTestCase < Test::Unit::TestCase
 
     Log.output = io
   end
+
+  def test_respond_to_color
+    assert Log.respond_to? :blue
+  end
 end
