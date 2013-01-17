@@ -102,3 +102,7 @@ Sun Jan 13 19:05:06 2013
 Mon Jan 14 17:42:24 2013
 
   ansicolor: moved to ansi-palette gem.
+
+Wed Jan 16 19:44:05 2013
+
+  asciitable: moved to a separate gem.
