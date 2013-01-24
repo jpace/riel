@@ -1,9 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'riel/env'
 require 'riel/log'
-require 'riel/enumerable'
 
 module OptProc
   class Option
