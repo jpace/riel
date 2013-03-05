@@ -2,6 +2,7 @@
 # -*- ruby -*-
 
 require 'riel/log'
+require 'riel/enumerable'
 
 module OptProc
   class Option

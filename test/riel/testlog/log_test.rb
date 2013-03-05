@@ -42,8 +42,8 @@ class LogTestCase < Test::Unit::TestCase
     (1 .. 6).each do |lnum|
       expected << sprintf("[   ...testlog/log_test.rb:  %2d] {%-20s} hello, world?", 30 + lnum, methname[0 .. 19])
     end
-    expected << "[   ...testlog/log_test.rb: 234] {call                } "
-    expected << "[   ...testlog/log_test.rb: 234] {run_test            } "
+    expected << "[   ...testlog/log_test.rb: 232] {call                } "
+    expected << "[   ...testlog/log_test.rb: 232] {run_test            } "
     expected << "[   ...testlog/log_test.rb:  49] {test_output_arg     } "
     
     run_test @verbose_setup, log, *expected
@@ -67,7 +67,7 @@ class LogTestCase < Test::Unit::TestCase
       Log.debug { evaluated = true; "hello, world?" }
     }
     
-    # run_test info_setup, log
+    run_test info_setup, log
     
     assert_equal false, evaluated
   end
@@ -89,14 +89,12 @@ class LogTestCase < Test::Unit::TestCase
     log = Proc.new { 
       white "white wedding"
       blue "blue iris"
-      on_cyan "red"
     }
 
     # test_col has become 'block in test colors' in 1.9
-    # run_test(@verbose_setup, log,
-    #          "[ ...test/riel/log_test.rb: 107] {LogTestCase#test_col} \e[37mwhite wedding\e[0m",
-    #          "[ ...test/riel/log_test.rb: 108] {LogTestCase#test_col} \e[34mblue iris\e[0m",
-    #          "[ ...test/riel/log_test.rb: 109] {LogTestCase#test_col} \e[46mred\e[0m")
+    run_test(@verbose_setup, log,
+             "[   ...testlog/log_test.rb:  90] {LogTestCase#block in} \e[37mwhite wedding\e[0m",
+             "[   ...testlog/log_test.rb:  91] {LogTestCase#block in} \e[34mblue iris\e[0m")
 
     Log.set_default_widths
   end

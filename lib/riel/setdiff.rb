@@ -8,8 +8,6 @@ class SetDiff
   def self.new a, b
     allitems = a | b
 
-    diff_type = :identical
-
     a_and_b = Array.new
     a_not_in_b = Array.new
     b_not_in_a = Array.new
