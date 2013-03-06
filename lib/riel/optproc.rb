@@ -1,12 +1,12 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'riel/log'
+require 'logue/loggable'
 require 'riel/enumerable'
 
 module OptProc
   class Option
-    include Loggable
+    include Logue::Loggable
 
     attr_reader :md, :tags, :res
 

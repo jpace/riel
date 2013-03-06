@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'riel/log'
+require 'logue/log'
 
 class Timer
 
@@ -11,7 +11,7 @@ class Timer
     end
 
     @io    = args[:io]    || $stdout
-    @level = args[:level] || Log::DEBUG
+    @level = args[:level] || Logue::Log::DEBUG
     
     stmsg  = args.include?(:startmsg) ? args[:startmsg] : "#{what} start time"
     endmsg = args.include?(:endmsg)   ? args[:endmsg]   : "#{what} end   time"
@@ -34,7 +34,7 @@ class Timer
       if @io
         @io.puts "#{msg}: #{value}"
       else
-        Log.log "#{msg}: #{value}", @level
+        Logue::Logue::Log.log "#{msg}: #{value}", @level
       end
     end
   end
@@ -43,10 +43,10 @@ end
 
 def timethis what
   sttime = Time.new
-  Log.log "#{what} start time: #{sttime}"
+  Logue::Log.log "#{what} start time: #{sttime}"
   yield
   endtime = Time.new
-  Log.log "#{what} start time: #{sttime}"
-  Log.log "#{what} end time  : #{endtime}"
-  Log.log "#{what} elapsed   : #{endtime - sttime}"
+  Logue::Log.log "#{what} start time: #{sttime}"
+  Logue::Log.log "#{what} end time  : #{endtime}"
+  Logue::Log.log "#{what} elapsed   : #{endtime - sttime}"
 end

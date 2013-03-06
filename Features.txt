@@ -110,3 +110,4 @@ Wed Jan 16 19:44:05 2013
 Tue Mar  5 19:29:45 2013
 
   Added require of pathname.
+  Removed riel/log code; migrated to logue.
