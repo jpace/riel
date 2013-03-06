@@ -106,3 +106,7 @@ Mon Jan 14 17:42:24 2013
 Wed Jan 16 19:44:05 2013
 
   asciitable: moved to a separate gem.
+
+Tue Mar  5 19:29:45 2013
+
+  Added require of pathname.

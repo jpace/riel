@@ -13,6 +13,7 @@ require 'rubygems'
 require 'rainbow'
 require 'riel/log/severity'
 require 'riel/log/format'
+require 'pathname'
 
 #
 # == Logger
