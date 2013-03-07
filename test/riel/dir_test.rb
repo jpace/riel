@@ -6,6 +6,10 @@ require 'pathname'
 require 'riel/dir'
 require 'riel/file'
 
+class Dir
+  include RIEL::DirExt
+end
+
 class DirTestCase < Test::Unit::TestCase
   def test_home
     assert_equal ENV["HOME"], Dir.home

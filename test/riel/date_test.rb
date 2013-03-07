@@ -4,6 +4,10 @@
 require 'test/unit'
 require 'riel/date'
 
+class Date
+  include RIEL::DateExt
+end
+
 class DateTestCase < Test::Unit::TestCase
   def run_date_test expected, year, month
     dim = Date.days_in_month(year, month)

@@ -5,12 +5,12 @@ require 'pathname'
 require 'test/unit'
 require 'riel/string'
 
+class String
+  include RIEL::StringExt
+end
+
 class StringToRangeTestCase < Test::Unit::TestCase
   def run_string_to_range_test exp, str, args = Hash.new
-    String.to_ranges(str, args).each_with_index do |rg, idx|
-      assert_equal exp[idx], rg
-    end
-
     str.to_ranges(args).each_with_index do |rg, idx|
       assert_equal exp[idx], rg
     end
