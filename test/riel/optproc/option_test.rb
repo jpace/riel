@@ -1,12 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'pathname'
-require 'tempfile'
 require 'test/unit'
 require 'riel/optproc'
 
-class OptProcTestCase < Test::Unit::TestCase
+class OptionTestCase < Test::Unit::TestCase
   def setup
     # ignore what they have in ENV[HOME]    
     ENV['HOME'] = '/this/should/not/exist'
@@ -24,7 +22,6 @@ class OptProcTestCase < Test::Unit::TestCase
   end
   
   def test_match_tag
-    @after = "nothing"
     opt = OptProc::Option.new :tags => %w{ --after-context -A }, :arg => [ :integer ]
     
     %w{ --after-context --after-context=3 -A }.each do |tag|
@@ -73,7 +70,6 @@ class OptProcTestCase < Test::Unit::TestCase
 
     {
       '34'    => true,
-      '43'    => true,
       '34.12' => nil,
       '-34'   => true,
       '+34'   => true,
@@ -87,7 +83,6 @@ class OptProcTestCase < Test::Unit::TestCase
 
     {
       '34'    => true,
-      '43'    => true,
       '34.12' => true,
       '.12'   => true,
       '.'     => false,
@@ -102,7 +97,6 @@ class OptProcTestCase < Test::Unit::TestCase
 
     {
       '34'    => true,
-      '43'    => true,
       '34.12' => true,
       '.12'   => true,
       '.'     => true,
@@ -122,42 +116,42 @@ class OptProcTestCase < Test::Unit::TestCase
   end
 
   def test_after_context_float
-    @after = nil
+    after = nil
     opt = OptProc::Option.new(:tags => %w{ --after-context -A },
                               :arg  => [ :required, :float ],
-                              :set  => Proc.new { |val| @after = val })
+                              :set  => Proc.new { |val| after = val })
     [ 
       %w{ --after-context 3 },
       %w{ --after-context=3 },
       %w{ -A              3 },
     ].each do |args|
-      @after = nil
+      after = nil
 
       m = opt.match args
       assert_equal 1.0, m, "args: #{args.inspect}"
       # curr = args.shift
       opt.set_value args
-      assert_equal 3.0, @after
+      assert_equal 3.0, after
     end
   end
 
   def test_regexp_option
-    @after = nil
+    ctx = nil
     opt = OptProc::Option.new(:res  => %r{ ^ - ([1-9]\d*) $ }x,
                               :tags => %w{ --context -C },
                               :arg  => [ :optional, :integer ],
-                              :set  => Proc.new { |val| @ctx = val })
+                              :set  => Proc.new { |val| ctx = val })
     [ 
       %w{ --context 3 },
       %w{ --context=3 },
       %w{ -C        3 },
     ].each do |args|
-      @ctx = nil
+      ctx = nil
 
       m = opt.match args
       assert_equal 1.0, m, "args: #{args.inspect}"
       opt.set_value args
-      assert_equal 3, @ctx
+      assert_equal 3, ctx
     end
 
     vals = (1 .. 10).to_a  | (1 .. 16).collect { |x| 2 ** x }
@@ -165,12 +159,12 @@ class OptProcTestCase < Test::Unit::TestCase
     vals.each do |val|
       args = [ '-' + val.to_s, 'foo' ]
 
-      @ctx = nil
+      ctx = nil
 
       m = opt.match args
       assert_equal 1.0, m, "args: #{args.inspect}"
       opt.set_value args
-      assert_equal val, @ctx
+      assert_equal val, ctx
     end
   end
 
@@ -194,9 +188,4 @@ class OptProcTestCase < Test::Unit::TestCase
       end
     end
   end
-
-end
-
-if __FILE__ == $0
-  Log.level = Log::DEBUG
 end
