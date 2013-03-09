@@ -1,12 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-
 # Represents a resource file, where '#' is used to comment to end of lines, and
 # name/value pairs are separated by '=' or ':'.
 
 class RCFile
-
   attr_reader :settings
 
   # Reads the RC file, if it exists, and if a block is passed, calls the block

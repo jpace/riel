@@ -4,7 +4,6 @@
 require 'logue/log'
 
 class Timer
-
   def initialize what, args = Hash.new
     if args.kind_of? Fixnum
       args = { :level => args }
@@ -38,7 +37,6 @@ class Timer
       end
     end
   end
-
 end
 
 def timethis what

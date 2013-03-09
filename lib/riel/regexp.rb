@@ -3,15 +3,12 @@
 
 # Negates the given expression.
 class NegatedRegexp < Regexp
-
   def match str
     !super
   end
-
 end
 
 class Regexp
-
   # shell expressions to Ruby regular expression sequences
   SH2RE = Hash[
     '*'  => '.*', 
@@ -148,5 +145,4 @@ class Regexp
   # applies Perl-style substitution (s/foo/bar/).
   def self.perl_subst pat
   end
-  
 end
