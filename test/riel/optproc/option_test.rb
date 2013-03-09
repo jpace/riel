@@ -12,13 +12,12 @@ class OptionTestCase < Test::Unit::TestCase
 
   def run_match_tag_test opt, exp, tag
     m = opt.match [ tag ]
-    match = nil
+    msg = "match_tag(#{tag}): expected: #{exp.inspect}; actual: #{m.inspect}"
     if exp.respond_to? :include?
-      match = exp.include? m
+      assert exp.include?(m), msg
     else
-      match = exp == m
+      assert_equal exp, m, msg
     end
-    assert match, "match_tag(#{tag}): expected: #{exp.inspect}; actual: #{m.inspect}"
   end
   
   def test_match_tag
@@ -129,7 +128,6 @@ class OptionTestCase < Test::Unit::TestCase
 
       m = opt.match args
       assert_equal 1.0, m, "args: #{args.inspect}"
-      # curr = args.shift
       opt.set_value args
       assert_equal 3.0, after
     end
@@ -155,7 +153,6 @@ class OptionTestCase < Test::Unit::TestCase
     end
 
     vals = (1 .. 10).to_a  | (1 .. 16).collect { |x| 2 ** x }
-    # vals = [ 4 ]
     vals.each do |val|
       args = [ '-' + val.to_s, 'foo' ]
 
@@ -169,23 +166,26 @@ class OptionTestCase < Test::Unit::TestCase
   end
 
   def test_value_regexp
-    @range_start = nil
+    range_start = nil
     opt = OptProc::Option.new(:tags => %w{ --after },
                               :arg  => [ :required, :regexp, %r{ ^ (\d+%?) $ }x ],
-                              :set  => Proc.new { |md| @range_start = md[1] })
+                              :set  => Proc.new { |md| range_start = md[1] })
     
     %w{ 5 5% 10 90% }.each do |rg|
       [
         [ '--after',   rg ],
         [ '--after=' + rg ]
       ].each do |args|
-        @range_start = nil
+        range_start = nil
         
         m = opt.match args
         assert_equal 1.0, m, "args: #{args.inspect}"
         opt.set_value args
-        assert_equal rg, @range_start
+        assert_equal rg, range_start
       end
     end
+  end
+
+  def test_match_rc
   end
 end

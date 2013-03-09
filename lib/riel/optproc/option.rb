@@ -8,7 +8,7 @@ module OptProc
   class Option
     include Logue::Loggable
 
-    attr_reader :md, :tags, :res
+    attr_reader :md, :tags, :regexps
 
     ARG_INTEGER = %r{^ ([\-\+]?\d+)               $ }x
     ARG_FLOAT   = %r{^ ([\-\+]?\d* (?:\.\d+)?)    $ }x
@@ -22,19 +22,19 @@ module OptProc
     ARG_TYPES << [ :boolean, ARG_BOOLEAN ]
 
     def initialize args = Hash.new, &blk
-      @tags    = args[:tags] || Array.new
-      @rcfield = args[:rc]
+      @tags = args[:tags] || Array.new
+      @rcfield = args[:rcfield] || args[:rc]
       @rcfield = [ @rcfield ] if @rcfield.kind_of?(String)
-      @md      = nil
-      @set     = blk || args[:set]
+      @md = nil
+      @set = blk || args[:set]
       
-      @type    = nil
+      @type = nil
       @valuere = nil
       
       @argtype = nil
 
-      @res     = args[:res]
-      @res     = [ @res ] if @res.kind_of?(Regexp)
+      @regexps = args[:regexps] || args[:res]
+      @regexps = [ @regexps ] if @regexps.kind_of?(Regexp)
       
       if args[:arg]
         demargs = args[:arg].dup
@@ -50,9 +50,9 @@ module OptProc
             @valuere = demargs.shift
           else
             if re = ARG_TYPES.assoc(arg)
-              @valuere   = re[1]
-              @argtype   = arg
-              @type    ||= "required"
+              @valuere = re[1]
+              @argtype = arg
+              @type ||= "required"
             end
           end
         end
@@ -102,7 +102,7 @@ module OptProc
 
       @md = nil
       
-      if @res && (@md = @res.collect { |re| re.match(opt) }.detect)
+      if @regexps && (@md = @regexps.collect { |re| re.match(opt) }.detect)
         1.0
       else
         match_tag tag
@@ -174,7 +174,7 @@ module OptProc
         when nil
           val
         else
-          log { "unknown argument type: #{@type.inspect}" }
+          log { "unknown argument type: #{@argtype.inspect}" }
         end
       elsif @argtype == :boolean
         true
