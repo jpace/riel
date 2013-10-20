@@ -39,7 +39,7 @@ class SizeConverterTestCase < Test::Unit::TestCase
     assert_equal data[offset + didx], conv, "size index: #{sidx}; data index: #{didx}; offset: #{offset}; decimal_places: #{dec_places}"
   end
 
-  def run_test cls, offset
+  def run_size_test cls, offset
     SIZES.each_with_index do |data, sidx|
       assert_conversion cls, data, offset, 1, sidx
       (0 .. 2).each do |dec_places|
@@ -49,14 +49,14 @@ class SizeConverterTestCase < Test::Unit::TestCase
   end
 
   def test_default
-    run_test SizeConverter, 0
+    run_size_test SizeConverter, 0
   end
 
   def test_human
-    run_test SizeConverter::Human, 0
+    run_size_test SizeConverter::Human, 0
   end
 
   def test_si
-    run_test SizeConverter::SI, 3
+    run_size_test SizeConverter::SI, 3
   end
 end

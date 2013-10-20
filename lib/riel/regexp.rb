@@ -100,7 +100,7 @@ class Regexp
     else
       pattern.sub!(%r{ ^\/ (.*[^\\]) \/ $ }x) { $1 }
     end
-    
+
     if wholewords
       # sanity check:
 
@@ -113,7 +113,7 @@ class Regexp
       end.compact
       
       if errs.length > 0
-        Log.warn "pattern '#{pattern}' does not " + errs.join(" and ") + " on a word boundary"
+        raise RuntimeError.new("pattern '#{pattern}' does not " + errs.join(" and ") + " on a word boundary")
       end
       pattern = '\b' + pattern + '\b'
     elsif wholelines

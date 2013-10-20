@@ -19,4 +19,10 @@ class RegexpTestCase < Test::Unit::TestCase
     assert NegatedRegexp.new("a[b-z]").match("aa")
     assert NegatedRegexp.new(".+").match("")
   end
+  
+  def test_invalid_whole_word
+    assert_raises(RuntimeError) do
+      re = Regexp.create ':abc', wholewords: true
+    end
+  end
 end
