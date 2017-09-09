@@ -22,7 +22,7 @@ class RegexpTestCase < Test::Unit::TestCase
   
   def test_invalid_whole_word
     assert_raises(RuntimeError) do
-      re = Regexp.create ':abc', wholewords: true
+      Regexp.create ':abc', wholewords: true
     end
   end
 end
