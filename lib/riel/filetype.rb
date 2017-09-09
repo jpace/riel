@@ -121,7 +121,7 @@ class FileType
   end
 
   def text? file
-    return false unless File.exists?(file)
+    return false unless File.exist?(file)
     
     if md = EXTENSION_REGEXP.match(file.to_s)
       suffix = md[1]
