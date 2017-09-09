@@ -18,7 +18,7 @@ spec = Gem::Specification.new do |s|
   s.version = "1.2.0"
   s.author = "Jeff Pace"
   s.email = "jeugenepace@gmail.com"
-  s.homepage = "http://www.incava.org/projects/riel"
+  s.homepage = "http://www.github.com/jpace/riel"
   s.platform = Gem::Platform::RUBY
   s.summary = "Extensions to core Ruby code."
   s.description = "This library extends the core Ruby libraries."
@@ -29,6 +29,7 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files = [ "README.md" ]
 
   s.add_dependency "rainbow", ">= 1.1.4"
+  s.add_dependency "paramesan"
 end
  
 Gem::PackageTask.new(spec) do |pkg| 
