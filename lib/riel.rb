@@ -1,8 +1,5 @@
-riellibdir = File.dirname(__FILE__)
+require "riel/version"
 
-$:.unshift(riellibdir) unless
-  $:.include?(riellibdir) || $:.include?(File.expand_path(riellibdir))
-
-module RIEL
-  VERSION = '1.2.0'
+module Riel
+  # Your code goes here...
 end

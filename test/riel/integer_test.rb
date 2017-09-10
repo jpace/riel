@@ -1,5 +1,4 @@
 require 'test_helper'
-
 require 'riel/integer'
 
 module PVN
