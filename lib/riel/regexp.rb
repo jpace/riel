@@ -8,28 +8,34 @@ class NegatedRegexp < Regexp
   end
 end
 
-class Regexp
-  # shell expressions to Ruby regular expression sequences
-  SH2RE = Hash[
-    '*'  => '.*', 
-    '?'  => '.',
-    # '['  => '\[',
-    # ']'  => '\]',
-    '.'  => '\.',
-    '$'  => '\$',
-    '/'  => '\/',
-    '('  => '\(',
-    ')'  => '\)',
-  ]
+module Riel
+end
 
-  # Returns a regular expression for the given Unix file system expression.
-  
-  def self.unixre_to_string pat
-    pat.gsub(%r{(\\.)|(.)}) do
-      $1 || SH2RE[$2] || $2
+class Riel::RegexpFactory
+  def from_shell_pattern shpat
+    @patterns ||= Hash.new.tap do |pats|
+      pats['*'] = '.*' 
+      pats['?'] = '.'
+      %w{ . $ / ( ) }.each do |ch|
+        pats[ch] = "\\" + ch
+      end
     end
+
+    re = Regexp.new '(\\\.)|(.)'
+    
+    converted = ""
+    shpat.gsub(re) do
+      converted << ($1 || @patterns[$2] || $2)
+    end
+
+    converted
   end
 
+  def create pat, args = Hash.new
+  end
+end
+
+class Regexp
   WORD_START_RE = Regexp.new('^                 # start of word
                                 [\[\(]*         # parentheses or captures, maybe
                                 (?: \\\w | \\w) # literal \w, or what \w matches

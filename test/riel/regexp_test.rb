@@ -3,17 +3,27 @@
 
 require 'test/unit'
 require 'riel/regexp'
+require 'paramesan'
+
+class Riel::RegexTestCase < Test::Unit::TestCase
+  include Paramesan
+  
+  param_test [
+    [ "a\\z",     "a\\z"  ],
+    [ "a\\.z",    "a.z"  ],
+    [ "a\\.\\.z", "a..z" ],
+    [ "a\\.z.*",  "a.z*" ],
+    [ "a.z",      "a?z"  ],
+    [ "a\\$",     "a$"   ],
+    [ "a\\/z",    "a/z"  ],
+    [ "a\\(z\\)", "a(z)" ],
+  ].each do |exp, pat|
+    assert_equal exp, Riel::RegexpFactory.new.from_shell_pattern(pat), "pat: #{pat}"
+  end
+end
 
 class RegexpTestCase < Test::Unit::TestCase
-  def test_unixre_to_string
-    assert_equal "a[b-z]",    Regexp.unixre_to_string("a[b-z]")
-    assert_equal "ab\\.z",    Regexp.unixre_to_string("ab.z")
-    assert_equal "ab\\.z.*",  Regexp.unixre_to_string("ab.z*")
-    assert_equal "a.c",       Regexp.unixre_to_string("a?c")
-    assert_equal "ab\\$",     Regexp.unixre_to_string("ab$")
-    assert_equal "a\\/c",     Regexp.unixre_to_string("a/c")
-    assert_equal "a\\(bc\\)", Regexp.unixre_to_string("a(bc)")
-  end
+  include Paramesan
   
   def test_negated
     assert NegatedRegexp.new("a[b-z]").match("aa")
