@@ -5,7 +5,7 @@ require 'test/unit'
 require 'riel/regexp'
 require 'paramesan'
 
-class Riel::RegexTestCase < Test::Unit::TestCase
+class Riel::RegexpFactoryTestCase < Test::Unit::TestCase
   include Paramesan
   
   param_test [
@@ -19,6 +19,12 @@ class Riel::RegexTestCase < Test::Unit::TestCase
     [ "a\\(z\\)", "a(z)" ],
   ].each do |exp, pat|
     assert_equal exp, Riel::RegexpFactory.new.from_shell_pattern(pat), "pat: #{pat}"
+  end
+
+  param_test [
+    [ Regexp.new("a"), "a", Hash.new ],
+  ].each do |exp, pat, args|
+    assert_equal exp, Riel::RegexpFactory.new.create(pat, args), "pat: #{pat}; args: #{args}"
   end
 end
 

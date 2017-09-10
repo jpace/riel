@@ -32,6 +32,15 @@ class Riel::RegexpFactory
   end
 
   def create pat, args = Hash.new
+    negated    = args[:negated]
+    ignorecase = args[:ignorecase]
+    wholewords = args[:wholewords]
+    wholelines = args[:wholelines]
+    extended   = args[:extended]
+    multiline  = args[:multiline]
+    
+
+    Regexp.new pat
   end
 end
 
