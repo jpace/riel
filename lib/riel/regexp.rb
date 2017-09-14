@@ -8,42 +8,6 @@ class NegatedRegexp < Regexp
   end
 end
 
-module Riel
-end
-
-class Riel::RegexpFactory
-  def from_shell_pattern shpat
-    @patterns ||= Hash.new.tap do |pats|
-      pats['*'] = '.*' 
-      pats['?'] = '.'
-      %w{ . $ / ( ) }.each do |ch|
-        pats[ch] = "\\" + ch
-      end
-    end
-
-    re = Regexp.new '(\\\.)|(.)'
-    
-    converted = ""
-    shpat.gsub(re) do
-      converted << ($1 || @patterns[$2] || $2)
-    end
-
-    converted
-  end
-
-  def create pat, args = Hash.new
-    negated    = args[:negated]
-    ignorecase = args[:ignorecase]
-    wholewords = args[:wholewords]
-    wholelines = args[:wholelines]
-    extended   = args[:extended]
-    multiline  = args[:multiline]
-    
-
-    Regexp.new pat
-  end
-end
-
 class Regexp
   WORD_START_RE = Regexp.new('^                 # start of word
                                 [\[\(]*         # parentheses or captures, maybe
